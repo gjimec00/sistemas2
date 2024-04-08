@@ -5,10 +5,12 @@
  */
 
 package practicasistemas;
+
+import base.newHibernateUtil;
 import java.util.Scanner;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 
 /**
  *
@@ -21,18 +23,18 @@ public class Practicasistemas {
      */
     public static void main(String[] args) {
         
+        //Opening session for the database.
+        SessionFactory sessionfactory = newHibernateUtil.getSessionFactory();
+        Session session = sessionfactory.openSession();
+        
         //Getting the DNI from the user.
         Scanner scanner = new Scanner(System.in);
         System.out.println("Introduzca el NIF deseado para mostrar su información: ");
         String NIF = scanner.nextLine();
         System.out.println(NIF);
-    
-        //Configure and connect to the Hibernate session
-        Configuration configuration = new Configuration().configure();
-        SessionFactory sessionFactory = configuration.buildSessionFactory();
-        Session session = sessionFactory.openSession();
         
-        session.close();
+        String contribuyenteSQL = "FROM Contribuyente c";
+        Query queryNIF = session.createQuery(contribuyenteSQL);
     }
 
 }
