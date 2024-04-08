@@ -5,6 +5,10 @@
  */
 
 package practicasistemas;
+import java.util.Scanner;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 /**
  *
@@ -16,7 +20,19 @@ public class Practicasistemas {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        
+        //Getting the DNI from the user.
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Introduzca el NIF deseado para mostrar su información: ");
+        String NIF = scanner.nextLine();
+        System.out.println(NIF);
+    
+        //Configure and connect to the Hibernate session
+        Configuration configuration = new Configuration().configure();
+        SessionFactory sessionFactory = configuration.buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        
+        session.close();
     }
 
 }
