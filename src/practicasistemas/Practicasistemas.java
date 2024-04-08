@@ -8,7 +8,7 @@ package practicasistemas;
 
 /**
  *
- * @author Guille
+ * @author Guille & Ovi 😎
  */
 public class Practicasistemas {
 
