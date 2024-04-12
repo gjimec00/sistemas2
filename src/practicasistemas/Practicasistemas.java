@@ -35,6 +35,15 @@ public class Practicasistemas {
         
         String contribuyenteSQL = "FROM Contribuyente c";
         Query queryNIF = session.createQuery(contribuyenteSQL);
+        List<Contribuyente> NIFs = queryNIF.list();
+        
+        for(Contribuyente c:NIFs){
+            
+            if(c.getNifnie().equals(nif)){
+}
+            }else{
+                
+            }
     }
 
 }
