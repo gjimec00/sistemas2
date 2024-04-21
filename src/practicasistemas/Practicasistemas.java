@@ -10,7 +10,7 @@ import base.Contribuyente;
 import base.Recibos;
 
 import java.util.List;
-import base.newHibernateUtil;
+import base.HibernateUtil;
 import java.util.Scanner;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -28,7 +28,7 @@ public class Practicasistemas {
     public static void main(String[] args) {
         
         //Opening session for the database.
-        SessionFactory sessionfactory = newHibernateUtil.getSessionFactory();
+        SessionFactory sessionfactory = HibernateUtil.getSessionFactory();
         Session session = sessionfactory.openSession();
         
         //Getting the DNI from the user.
