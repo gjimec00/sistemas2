@@ -46,11 +46,11 @@ Contributor(s):
     <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/agua</property>
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">admin</property>
-    <mapping resource="base/RelContribuyenteOrdenanza.hbm.xml"/>
-    <mapping resource="base/Lineasrecibo.hbm.xml"/>
-    <mapping resource="base/Ordenanza.hbm.xml"/>
-    <mapping resource="base/Contribuyente.hbm.xml"/>
-    <mapping resource="base/Recibos.hbm.xml"/>
-    <mapping resource="base/Lecturas.hbm.xml"/>
+    <mapping resource="POJOS/RelContribuyenteOrdenanza.hbm.xml"/>
+    <mapping resource="POJOS/Lineasrecibo.hbm.xml"/>
+    <mapping resource="POJOS/Ordenanza.hbm.xml"/>
+    <mapping resource="POJOS/Contribuyente.hbm.xml"/>
+    <mapping resource="POJOS/Recibos.hbm.xml"/>
+    <mapping resource="POJOS/Lecturas.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

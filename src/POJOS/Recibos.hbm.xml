@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 31-mar-2024 14:13:27 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="agua" name="POJOS.Recibos" optimistic-lock="version" table="recibos">
+    <id name="numeroRecibo" type="int">
+      <column name="numeroRecibo"/>
+      <generator class="assigned"/>
+    </id>
+    <many-to-one class="POJOS.Contribuyente" fetch="select" name="contribuyente">
+      <column name="idContribuyente"/>
+    </many-to-one>
+    <property name="nifContribuyente" type="string">
+      <column length="50" name="nifContribuyente" not-null="true"/>
+    </property>
+    <property name="direccionCompleta" type="string">
+      <column length="50" name="direccionCompleta" not-null="true"/>
+    </property>
+    <property name="nombre" type="string">
+      <column length="50" name="nombre" not-null="true"/>
+    </property>
+    <property name="apellidos" type="string">
+      <column length="50" name="apellidos" not-null="true"/>
+    </property>
+    <property name="fechaRecibo" type="date">
+      <column length="10" name="fechaRecibo" not-null="true"/>
+    </property>
+    <property name="lecturaAnterior" type="int">
+      <column name="lecturaAnterior" not-null="true"/>
+    </property>
+    <property name="lecturaActual" type="int">
+      <column name="lecturaActual" not-null="true"/>
+    </property>
+    <property name="consumom3" type="int">
+      <column name="consumom3" not-null="true"/>
+    </property>
+    <property name="fechaPadron" type="date">
+      <column length="10" name="fechaPadron" not-null="true"/>
+    </property>
+    <property name="totalBaseImponible" type="double">
+      <column name="totalBaseImponible" not-null="true" precision="22" scale="0"/>
+    </property>
+    <property name="totalIva" type="double">
+      <column name="totalIVA" not-null="true" precision="22" scale="0"/>
+    </property>
+    <property name="totalRecibo" type="double">
+      <column name="totalRecibo" not-null="true" precision="22" scale="0"/>
+    </property>
+    <property name="iban" type="string">
+      <column length="50" name="IBAN"/>
+    </property>
+    <property name="email" type="string">
+      <column length="50" name="email"/>
+    </property>
+    <property name="exencion" type="string">
+      <column length="1" name="exencion"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="lineasrecibos" table="lineasrecibo">
+      <key>
+        <column name="idRecibo" not-null="true"/>
+      </key>
+      <one-to-many class="POJOS.Lineasrecibo"/>
+    </set>
+  </class>
+</hibernate-mapping>

@@ -6,15 +6,16 @@
 
 package practicasistemas;
 
-import base.Contribuyente;
-import base.Recibos;
+import POJOS.Contribuyente;
+import POJOS.Recibos;
 
 import java.util.List;
-import base.HibernateUtil;
+import POJOS.HibernateUtil;
 import java.util.Scanner;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 /**
  *
@@ -30,13 +31,14 @@ public class Practicasistemas {
         //Opening session for the database.
         SessionFactory sessionfactory = HibernateUtil.getSessionFactory();
         Session session = sessionfactory.openSession();
+        Transaction tx = session.beginTransaction();
         
         //Getting the DNI from the user.
         Scanner scanner = new Scanner(System.in);
         System.out.println("Introduzca el NIF deseado para mostrar su información: ");
         String NIF = scanner.nextLine();
-        //System.out.println(NIF);
-        
+
+        boolean find = false;
         String contribuyenteHQL = "FROM Contribuyente c";
         Query queryNIF = session.createQuery(contribuyenteHQL);
         List<Contribuyente> NIFs = queryNIF.list();
@@ -44,10 +46,15 @@ public class Practicasistemas {
         String recibosHQL = "FROM Recibos r";
         Query queryRecNIF = session.createQuery(recibosHQL);
         List<Recibos> recNIFs = queryRecNIF.list();
-        
+
+        String lineasReciboHQL = "SELECT AVG(baseImponible) FROM Lineasrecibo";
+        Query querylineasRecibo = session.createQuery(lineasReciboHQL);
+        Double mediaBaseImp = (Double) querylineasRecibo.uniqueResult();
+
         for(Contribuyente c:NIFs){
             
             if(c.getNifnie().equals(NIF)){
+               find = true;
                String nombre = c.getNombre();
                String apellido1 = c.getApellido1();
                String apellido2 = c.getApellido2();
@@ -64,8 +71,22 @@ public class Practicasistemas {
                     r.setTotalRecibo(totalRec);
                 }
                }
+               try {
+               String eliminarHQL = "DELETE FROM Lineasrecibo WHERE baseImponible < :media";
+               Query queryEliminar = session.createQuery(eliminarHQL);
+               queryEliminar.setParameter("media", mediaBaseImp);
+               queryEliminar.executeUpdate();
+               } catch (Exception e) {
+                e.printStackTrace();
+               }
             }
         }
+        
+        if(find == false){
+            System.out.println("El trabajador no se ha encontrado en el sistema.");
+        }
+        tx.commit();
+        HibernateUtil.shutdown();
     }
 
 }

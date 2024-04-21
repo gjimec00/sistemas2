@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 31-mar-2024 14:13:27 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="agua" name="POJOS.Ordenanza" optimistic-lock="version" table="ordenanza">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="idOrdenanza" type="int">
+      <column name="idOrdenanza" not-null="true"/>
+    </property>
+    <property name="concepto" type="string">
+      <column length="50" name="concepto" not-null="true"/>
+    </property>
+    <property name="subconcepto" type="string">
+      <column length="50" name="subconcepto" not-null="true"/>
+    </property>
+    <property name="descripcion" type="string">
+      <column length="50" name="descripcion" not-null="true"/>
+    </property>
+    <property name="acumulable" type="string">
+      <column length="50" name="acumulable"/>
+    </property>
+    <property name="precioFijo" type="java.lang.Integer">
+      <column name="precioFijo"/>
+    </property>
+    <property name="m3incluidos" type="java.lang.Integer">
+      <column name="m3incluidos"/>
+    </property>
+    <property name="preciom3" type="java.lang.Double">
+      <column name="preciom3" precision="22" scale="0"/>
+    </property>
+    <property name="porcentaje" type="java.lang.Double">
+      <column name="porcentaje" precision="22" scale="0"/>
+    </property>
+    <property name="conceptoRelacionado" type="java.lang.Integer">
+      <column name="conceptoRelacionado"/>
+    </property>
+    <property name="iva" type="java.lang.Double">
+      <column name="IVA" precision="22" scale="0"/>
+    </property>
+    <property name="pueblo" type="string">
+      <column length="50" name="pueblo"/>
+    </property>
+    <property name="tipoCalculo" type="string">
+      <column length="50" name="tipoCalculo"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="relContribuyenteOrdenanzas" table="rel_contribuyente_ordenanza">
+      <key>
+        <column name="idOrdenanza"/>
+      </key>
+      <one-to-many class="POJOS.RelContribuyenteOrdenanza"/>
+    </set>
+  </class>
+</hibernate-mapping>
