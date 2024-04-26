@@ -37,7 +37,7 @@ public class ExcelManager {
                     }else{
                         Contribuyente contribuyente = new Contribuyente();
                         contribuyente.setIdContribuyente(0);
-                        mapContribuyentes.put(i, contribuyente);
+                        mapContribuyentes.put(i + 1, contribuyente);
                     }
                 }
                 workbook.close();
@@ -49,7 +49,7 @@ public class ExcelManager {
     }
 
     private static Contribuyente createContribuyenteFromRow(Row row){
-        int id = row.getRowNum();
+        int id = row.getRowNum() + 1;
         Contribuyente contribuyente = new Contribuyente();
         contribuyente.setIdContribuyente(id);
         contribuyente.setNombre(row.getCell(0).toString());
