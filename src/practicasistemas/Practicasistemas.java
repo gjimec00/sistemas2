@@ -24,6 +24,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.OutputKeys;
 import java.io.File;
 import javax.xml.transform.dom.DOMSource;
+import java.util.ArrayList;
+import java.util.List;
+import java.math.BigInteger;
 
 /**
  *
@@ -35,42 +38,73 @@ public class Practicasistemas {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Map<Integer, Contribuyente> contribuyentes = new LinkedHashMap<>();
-        try{
-        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = builderFactory.newDocumentBuilder();
-        DOMImplementation domImplementation = builder.getDOMImplementation();
+        Map < Integer, Contribuyente > contribuyentes = new LinkedHashMap < > ();
+        try {
+            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = builderFactory.newDocumentBuilder();
+            DOMImplementation domImplementation = builder.getDOMImplementation();
 
-        Document document = domImplementation.createDocument(null, "ErroresNifNie", null);
-        document.setXmlVersion("1.0");
-        Element contribuyentesElem = document.createElement("Contribuyentes");
-        
-   
-        contribuyentes = ExcelManager.getContribuyentesExcel("./resources/SistemasAgua.xlsx");
-        for(int i = 2; i < contribuyentes.size(); i++){
-            if(contribuyentes.get(i).getIdContribuyente() != 0){
-            String nifnie = contribuyentes.get(i).getNifnie();
-            comprobarDNI(nifnie, contribuyentes.get(i), document, contribuyentesElem);
-            }else{
-                System.out.println("Línea en blanco");
+            Document document = domImplementation.createDocument(null, null, null);
+            document.setXmlVersion("1.0");
+            Element contribuyentesElem = document.createElement("Contribuyentes");
+
+            DocumentBuilderFactory builderFactoryCcc = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builderCcc = builderFactoryCcc.newDocumentBuilder();
+            DOMImplementation domImplementationCcc = builderCcc.getDOMImplementation();
+
+            Document documentCcc = domImplementationCcc.createDocument(null, null, null);
+            documentCcc.setXmlVersion("1.0");
+            Element cuentasElem = documentCcc.createElement("Cuentas");
+
+
+            contribuyentes = ExcelManager.getContribuyentesExcel("./resources/SistemasAgua.xlsx");
+            Map < Integer, String > listanifnies = new LinkedHashMap < > ();
+            for (int i = 2; i < contribuyentes.size(); i++) {
+                if (contribuyentes.get(i).getIdContribuyente() != 0) {
+                    String nifnie = contribuyentes.get(i).getNifnie();
+                    comprobarDNI(nifnie, contribuyentes.get(i), document, contribuyentesElem);
+                    comprobarCCC(contribuyentes.get(i), documentCcc, cuentasElem);
+                } else {
+                    System.out.println("Línea en blanco");
+                }
+
             }
-            
-        }
-        
-        document.getDocumentElement().appendChild(contribuyentesElem);
-        Source source = new DOMSource(document);
-        Result result = new StreamResult(new File("./resources/ErroresNifNie.xml"));
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.transform(source, result);
-        }catch(Exception e){
+            for (int i = 2; i < contribuyentes.size(); i++) {
+                if (contribuyentes.get(i).getIdContribuyente() != 0) {
+                    if (!listanifnies.containsValue(contribuyentes.get(i).getNifnie())) {
+                        listanifnies.put(contribuyentes.get(i).getIdContribuyente(), contribuyentes.get(i).getNifnie());
+                    } else {
+                        crearXMLNifnie(contribuyentes.get(i), document, contribuyentesElem);
+                    }
+                }
+            }
+
+            if (document.getDocumentElement() == null) {
+                document.appendChild(contribuyentesElem);
+            }
+            Source source = new DOMSource(document);
+            Result result = new StreamResult(new File("./resources/ErroresNifNie.xml"));
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.transform(source, result);
+
+            if (documentCcc.getDocumentElement() == null) {
+                documentCcc.appendChild(cuentasElem);
+            }
+            Source sourceCcc = new DOMSource(documentCcc);
+            Result resultCcc = new StreamResult(new File("./resources/ErroresCCC.xml"));
+            Transformer transformerCcc = TransformerFactory.newInstance().newTransformer();
+            transformerCcc.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformerCcc.transform(sourceCcc, resultCcc);
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
-    public static void comprobarDNI(String nifnie, Contribuyente contribuyente, Document document, Element contribuyentesElem){
+    public static void comprobarDNI(String nifnie, Contribuyente contribuyente, Document document, Element contribuyentesElem) {
         String letter = "TRWAGMYFPDXBNJZSQVHLCKE";
         String dniNieRaw = nifnie;
 
-        if(dniNieRaw.length() != 9) {
+        if (dniNieRaw.length() != 9) {
             System.out.println("DNI o NIE introducido no correcto. (Longitud erronea)");
             crearXMLNifnie(contribuyente, document, contribuyentesElem);
             return;
@@ -82,21 +116,21 @@ public class Practicasistemas {
         String dniNie = dniNieRaw.substring(0, dniNieRaw.length() - 1);
         int dniNieNum;
 
-        if(Character.isDigit(firstChar)){
+        if (Character.isDigit(firstChar)) {
             for (int i = 0; i < dniNie.length(); i++) {
                 if (!Character.isDigit(dniNie.charAt(i))) {
                     isDigit = false;
                     break;
                 }
             }
-            if(isDigit){
+            if (isDigit) {
                 dniNieNum = Integer.parseInt(dniNie);
-            }else{
+            } else {
                 System.out.println("El DNI o NIE introducido tiene letras entre medias.");
                 crearXMLNifnie(contribuyente, document, contribuyentesElem);
                 return;
             }
-        }else if(firstChar == 'X' || firstChar == 'Y' || firstChar == 'Z'){
+        } else if (firstChar == 'X' || firstChar == 'Y' || firstChar == 'Z') {
             for (int i = 1; i < dniNie.length(); i++) {
                 if (!Character.isDigit(dniNie.charAt(i))) {
                     isDigit = false;
@@ -104,15 +138,15 @@ public class Practicasistemas {
                 }
             }
 
-            if(isDigit){
+            if (isDigit) {
                 String correct = dniNie.replace('X', '0').replace('Y', '1').replace('Z', '2');
                 dniNieNum = Integer.parseInt(correct);
-            }else{
+            } else {
                 System.out.println("El DNI o NIE introducido tiene letras entre medias.");
                 crearXMLNifnie(contribuyente, document, contribuyentesElem);
                 return;
             }
-        }else{
+        } else {
             System.out.println("El primer dígito no es ni X, Y o Z ni numérico.");
             crearXMLNifnie(contribuyente, document, contribuyentesElem);
             return;
@@ -121,88 +155,201 @@ public class Practicasistemas {
         int rest = dniNieNum % 23;
         char check = letter.charAt(rest);
 
-        if(dniNieLetter == check){
+        if (dniNieLetter == check) {
             System.out.println("DNI correcto.");
-        }else{
+        } else {
             System.out.println("DNI incorrecto, Error subsanable.");
-            crearXMLNifnie(contribuyente, document, contribuyentesElem);
+            String dniCorregido = dniNie + check;
+            contribuyente.setNifnie(dniCorregido);
+            ExcelManager.setNewContribuyente("./resources/SistemasAgua.xlsx", contribuyente);
         }
     }
 
-    public static void crearXMLNifnie(Contribuyente contribuyente, Document document, Element contribuyentesElem){
+    public static void crearXMLNifnie(Contribuyente contribuyente, Document document, Element contribuyentesElem) {
         Element contribuyenteElem = document.createElement("Contribuyente");
-        contribuyenteElem.setAttribute("id",Integer.toString(contribuyente.getIdContribuyente()));
-        
-        Element nifnie = document.createElement("NIF_NIE");
-        Text nifnieT = document.createTextNode(contribuyente.getNifnie());
-        nifnie.appendChild(nifnieT);
-        contribuyenteElem.appendChild(nifnie);
+        contribuyenteElem.setAttribute("id", Integer.toString(contribuyente.getIdContribuyente()));
 
-        Element nombre = document.createElement("Nombre");
-        Text nombreT = document.createTextNode(contribuyente.getNombre());
-        nombre.appendChild(nombreT);
-        contribuyenteElem.appendChild(nombre);
+        if (contribuyente.getNifnie() != null) {
+            Element nifnie = document.createElement("NIF_NIE");
+            Text nifnieT = document.createTextNode(contribuyente.getNifnie());
+            nifnie.appendChild(nifnieT);
+            contribuyenteElem.appendChild(nifnie);
+        } else {
+            Element nifnie = document.createElement("NIF_NIE");
+            Text nifnieT = document.createTextNode("");
+            nifnie.appendChild(nifnieT);
+            contribuyenteElem.appendChild(nifnie);
+        }
 
-        Element apellido1 = document.createElement("PrimerApellido");
-        Text apellido1T = document.createTextNode(contribuyente.getApellido1());
-        apellido1.appendChild(apellido1T);
-        contribuyenteElem.appendChild(apellido1);
+        if (contribuyente.getNombre() != null) {
+            Element nombre = document.createElement("Nombre");
+            Text nombreT = document.createTextNode(contribuyente.getNombre());
+            nombre.appendChild(nombreT);
+            contribuyenteElem.appendChild(nombre);
+        } else {
+            Element nombre = document.createElement("Nombre");
+            Text nombreT = document.createTextNode("");
+            nombre.appendChild(nombreT);
+            contribuyenteElem.appendChild(nombre);
+        }
 
-        Element apellido2 = document.createElement("SegundoApellido");
-        Text apellido2T = document.createTextNode(contribuyente.getApellido2());
-        apellido2.appendChild(apellido2T);
-        contribuyenteElem.appendChild(apellido2);
+        if (contribuyente.getApellido1() != null) {
+            Element apellido1 = document.createElement("PrimerApellido");
+            Text apellido1T = document.createTextNode(contribuyente.getApellido1());
+            apellido1.appendChild(apellido1T);
+            contribuyenteElem.appendChild(apellido1);
+        } else {
+            Element apellido1 = document.createElement("PrimerApellido");
+            Text apellido1T = document.createTextNode("");
+            apellido1.appendChild(apellido1T);
+            contribuyenteElem.appendChild(apellido1);
+        }
 
+        if (contribuyente.getApellido2() != null) {
+            Element apellido2 = document.createElement("SegundoApellido");
+            Text apellido2T = document.createTextNode(contribuyente.getApellido2());
+            apellido2.appendChild(apellido2T);
+            contribuyenteElem.appendChild(apellido2);
+        } else {
+            Element apellido2 = document.createElement("SegundoApellido");
+            Text apellido2T = document.createTextNode("");
+            apellido2.appendChild(apellido2T);
+            contribuyenteElem.appendChild(apellido2);
+        }
         contribuyentesElem.appendChild(contribuyenteElem);
     }
-    /*
-    public static void comprobarCCCyGenIBAN(String CCC){
-        if(CCC.length() != 20){
-            System.out.println("Cagaste");
-            return;
+    public static void crearXMLccc(Contribuyente contribuyente, Document documentCcc, Element cuentasElem) {
+        Element cuentaElem = documentCcc.createElement("Cuenta");
+        cuentaElem.setAttribute("id", Integer.toString(contribuyente.getIdContribuyente()));
+
+        if (contribuyente.getNombre() != null) {
+            Element nombre = documentCcc.createElement("Nombre");
+            Text nombreT = documentCcc.createTextNode(contribuyente.getNombre());
+            nombre.appendChild(nombreT);
+            cuentaElem.appendChild(nombre);
+        } else {
+            Element nombre = documentCcc.createElement("Nombre");
+            Text nombreT = documentCcc.createTextNode("");
+            nombre.appendChild(nombreT);
+            cuentaElem.appendChild(nombre);
         }
 
+        Element apellidos = documentCcc.createElement("Apellidos");
+        if (contribuyente.getApellido1() != null) {
+            Text apellido1T = documentCcc.createTextNode(contribuyente.getApellido1());
+            apellidos.appendChild(apellido1T);
+        } else {
+            Text apellido1T = documentCcc.createTextNode("");
+            apellidos.appendChild(apellido1T);
+        }
+        if(contribuyente.getApellido2() != null){
+            Text apellido2T = documentCcc.createTextNode(contribuyente.getApellido2());
+            apellidos.appendChild(apellido2T);
+        }else{
+            Text apellido2T = documentCcc.createTextNode("");
+            apellidos.appendChild(apellido2T);
+        }
+        cuentaElem.appendChild(apellidos);
+
+        if (contribuyente.getNifnie() != null) {
+            Element nifnie = documentCcc.createElement("NIFNIE");
+            Text nifnieT = documentCcc.createTextNode(contribuyente.getNifnie());
+            nifnie.appendChild(nifnieT);
+            cuentaElem.appendChild(nifnie);
+        } else {
+            Element nifnie = documentCcc.createElement("NIFNIE");
+            Text nifnieT = documentCcc.createTextNode("");
+            nifnie.appendChild(nifnieT);
+            cuentaElem.appendChild(nifnie);
+        }
+
+        if (contribuyente.getCcc() != null) {
+            Element ccc = documentCcc.createElement("CCCErroneo");
+            Text cccT = documentCcc.createTextNode(contribuyente.getCcc());
+            ccc.appendChild(cccT);
+            cuentaElem.appendChild(ccc);
+        } else {
+            Element ccc = documentCcc.createElement("CCCErroneo");
+            Text cccT = documentCcc.createTextNode("");
+            ccc.appendChild(cccT);
+            cuentaElem.appendChild(ccc);
+        }
+
+        if (contribuyente.getIban() != null) {
+            Element iban = documentCcc.createElement("IBANCorrecto");
+            Text ibanT = documentCcc.createTextNode(contribuyente.getIban());
+            iban.appendChild(ibanT);
+            cuentaElem.appendChild(iban);
+        } else {
+            Element iban = documentCcc.createElement("IBANCorrecto");
+            Text ibanT = documentCcc.createTextNode("");
+            iban.appendChild(ibanT);
+            cuentaElem.appendChild(iban);
+        }
+        cuentasElem.appendChild(cuentaElem);
+
+
+
+
+    }
+
+    
+    public static void comprobarCCC(Contribuyente contribuyente, Document documentCcc, Element cuentasElem){
+    //Creación alfabeto
+        String abcd = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        int[] abcdNum = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35};
+        String CCC = contribuyente.getCcc();
+        //Comprobación subsanabilidad
+        if(CCC.length() != 20){
+            System.out.println("Cagaste");
+            crearXMLccc(contribuyente, documentCcc, cuentasElem);
+            return;
+        }
+        
+        //Comprobación letras en CCC (en caso de haber no es subsanable)
         int lett = 0;
         do {
             if (Character.isLetter(CCC.charAt(lett))) {
                 System.out.println("Hay letras en la cadena dada");
+                crearXMLccc(contribuyente, documentCcc, cuentasElem);
                 return;
             }
             lett++;
         } while (lett != 20);
 
-        String nrbe = CCC.substring(0,4);
-        String office = CCC.substring(4,8);
+        //Obtención NRBE, Número de oficina, Número de control e ID.
+        String nrbe_office = CCC.substring(0,8);
         String control = CCC.substring(8,10);
         String id = CCC.substring(10);
         int[] facts = {1, 2, 4, 8, 5, 10, 9, 7, 3, 6};
 
-        String nrbe_office = CCC.substring(0,8);
-        int[] firstDigitCheck = new int[10];
-        int[] secondDigitCheck = new int[10];
+        int[] nrbeOfficeCheck = new int[10];
+        int[] idCheck = new int[10];
 
-        firstDigitCheck[0] = 0;
-        firstDigitCheck[1] = 0;
+        //Inicializamos el número NRBE y Office con 00 delante.
+        nrbeOfficeCheck[0] = 0;
+        nrbeOfficeCheck[1] = 0;
 
         int CCCI = 0;
-        for(int i = 2; i < firstDigitCheck.length; i++){
-            firstDigitCheck[i] = Character.getNumericValue(nrbe_office.charAt(CCCI));
+        for(int i = 2; i < nrbeOfficeCheck.length; i++){
+            nrbeOfficeCheck[i] = Character.getNumericValue(nrbe_office.charAt(CCCI));
             CCCI++;
         }
 
-        for(int i = 0; i < secondDigitCheck.length; i++){
-            secondDigitCheck[i] = Character.getNumericValue(id.charAt(i));
+        for(int i = 0; i < idCheck.length; i++){
+            idCheck[i] = Character.getNumericValue(id.charAt(i));
         }
 
         int firstSum = 0;
         int secondSum = 0;
 
-        for(int i = 0; i < firstDigitCheck.length; i++){
-            firstSum += firstDigitCheck[i] * facts[i];
+        //Obtenemos las sumas totales de los dos números en conjunto para posteriormente obtener los dígitos.
+        for(int i = 0; i < nrbeOfficeCheck.length; i++){
+            firstSum += nrbeOfficeCheck[i] * facts[i];
         }
 
-        for(int i = 0; i < secondDigitCheck.length; i++){
-            secondSum += secondDigitCheck[i] * facts[i];
+        for(int i = 0; i < idCheck.length; i++){
+            secondSum += idCheck[i] * facts[i];
         }
 
         int firstRest = firstSum % 11;
@@ -219,21 +366,86 @@ public class Practicasistemas {
             secondDigit = 0;
         }
 
+        //Convertimos el String a un array de chars para operar con ello y obtener el número final
         char[] CorrectedCCC = CCC.toCharArray();
+        String CorrectedCCCStd;
+        boolean check = false;
 
-
+        //Comprobamos si coincide el número de control válido con el existente, en caso de no coincidir subsana.
         if(Character.getNumericValue(control.charAt(0)) != firstDigit){
             System.out.println("El primer dígito de control no es correcto.");
             CorrectedCCC[8] = String.valueOf(firstDigit).charAt(0);
+            check = true;
+
         }
 
         if(Character.getNumericValue(control.charAt(1)) != secondDigit){
             System.out.println("El segundo dígito de control no es correcto.");
             CorrectedCCC[9] = String.valueOf(secondDigit).charAt(0);
+            check = true;
         }
 
+        
+        CorrectedCCCStd = Arrays.toString(CorrectedCCC);
 
-        System.out.println(CCC + "\n" + nrbe + "\n" + office + "\n" + control + "\n" + id + "\n" + nrbe_office + "\n" + Arrays.toString(firstDigitCheck) + "\n" + Arrays.toString(secondDigitCheck) + "\n" + firstDigit + "\n" + secondDigit + "\n" + Arrays.toString(CorrectedCCC));
+        //Obtenemos un array de chars a partir del CCC e implementando los números de las letras del país
+        char[] IBAN = new char[26];
+        System.arraycopy(CorrectedCCC, 0, IBAN, 0, CorrectedCCC.length);
+
+        char firstIbanLetter = contribuyente.getPaisCcc().charAt(0); //Crear String PaisCCC y PaisCCC.charAt(0)
+        char secondIbanLetter = contribuyente.getPaisCcc().charAt(1); //Crear String PaisCCC y PaisCCC.charAt(1)
+
+        for (int i = 0; i < abcd.length(); i++) {
+            if(firstIbanLetter == abcd.charAt(i)){
+                int num = abcdNum[i];
+                for (int j = 0; j < 2; j++) {
+                    IBAN[j + 20] = Integer.toString(num).charAt(j);
+                }
+            }
+        }
+
+        for (int i = 0; i < abcd.length(); i++) {
+            if(secondIbanLetter == abcd.charAt(i)){
+                int num = abcdNum[i];
+                for (int j = 0; j < 2; j++) {
+                    IBAN[j + 22] = Integer.toString(num).charAt(j);
+                }
+            }
+        }
+
+        IBAN[24] = '0';
+        IBAN[25] = '0';
+
+        //Creamos un String a partir del array de chars con números del IBAN para operar en él aplicando el módulo
+        String IBANStr = new String(IBAN);
+        BigInteger IBANNum = new BigInteger(IBANStr);
+        BigInteger IBANModule = IBANNum.mod(BigInteger.valueOf(97));
+
+        int diff = 98 - IBANModule.intValue();
+        char[] conv = new char[Integer.toString(diff).length()];
+
+        for (int i = 0; i < Integer.toString(diff).length(); i++) {
+            conv[i] = Integer.toString(diff).charAt(i);
+        }
+
+        //Comprobamos si los dígitos de control obtenidos son válidos.
+        StringBuilder correctedIBAN = new StringBuilder();
+        for(int i = 0; i < 24; i++){
+            if(i == 0){
+                correctedIBAN.append(contribuyente.getPaisCcc().charAt(i));
+            }else if(i == 1){
+                correctedIBAN.append(contribuyente.getPaisCcc().charAt(i));
+            }else if(i == 2) {
+                correctedIBAN.append(conv[0]);
+            }else if(i == 3){
+                correctedIBAN.append(conv[1]);
+            }else{
+                correctedIBAN.append(CorrectedCCC[i - 4]);
+            }
+        }
+        contribuyente.setIban(correctedIBAN.toString());
+        if(check){crearXMLccc(contribuyente, documentCcc, cuentasElem);}
+        //System.out.println(Arrays.toString(nrbeOfficeCheck) + "\n" + Arrays.toString(idCheck) + "\n" + firstDigit + "\n" + secondDigit + "\n" + Arrays.toString(CorrectedCCC) + "\n" + correctedIBAN);
     
-    }*/
+    }
 }

@@ -10,13 +10,16 @@ package practicasistemas;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Cell;
 import POJOS.Contribuyente;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.File;
 /**
  *
  * @author Guille
@@ -27,7 +30,7 @@ public class ExcelManager {
         Map<Integer, Contribuyente> mapContribuyentes = new LinkedHashMap<>();
         try (FileInputStream inputExcel = new FileInputStream(excel);
             Workbook workbook = new XSSFWorkbook(inputExcel)){
-                Sheet sheet = workbook.getSheetAt(0);
+            Sheet sheet = workbook.getSheetAt(0);
 
                 for(int i = 1; i <= sheet.getLastRowNum(); i++){
                     Row row = sheet.getRow(i);
@@ -76,5 +79,36 @@ public class ExcelManager {
             contribuyente.setCcc(row.getCell(7).toString());
         } 
         return contribuyente;
+    }
+
+    public static void setNewContribuyente(String archivo, Contribuyente contribuyente){
+        try {
+            FileInputStream inputExcel = new FileInputStream(new File(archivo));
+            Workbook workbook = new XSSFWorkbook(inputExcel);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for(int i = 1; i < sheet.getLastRowNum(); i++){
+                Row row = sheet.getRow(i);
+                if(row != null){
+                    if(contribuyente.getIdContribuyente() == row.getRowNum()+1){
+                        Cell cell = row.getCell(3);
+                        cell.setCellValue(contribuyente.getNifnie());
+                    }
+                }
+            }
+            
+            FileOutputStream fileOutput = null;
+            File file;
+
+            file = new File(archivo);
+            fileOutput = new FileOutputStream(file);
+
+            workbook.write(fileOutput);
+            workbook.close();
+
+            fileOutput.close();
+        } catch (Exception e){
+        
+        }
     }
 }
