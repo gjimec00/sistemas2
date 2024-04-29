@@ -297,7 +297,7 @@ public class Practicasistemas {
         String CCC = contribuyente.getCcc();
         //Comprobación subsanabilidad
         if(CCC.length() != 20){
-            System.out.println("Cagaste");
+            System.out.println("La longitud de la cuenta no es correcta.");
             crearXMLccc(contribuyente, documentCcc, cuentasElem);
             return;
         }
@@ -306,7 +306,7 @@ public class Practicasistemas {
         int lett = 0;
         do {
             if (Character.isLetter(CCC.charAt(lett))) {
-                System.out.println("Hay letras en la cadena dada");
+                System.out.println("Hay letras en la cadena dada.");
                 crearXMLccc(contribuyente, documentCcc, cuentasElem);
                 return;
             }
