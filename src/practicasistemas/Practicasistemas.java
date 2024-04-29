@@ -62,21 +62,12 @@ public class Practicasistemas {
             for (int i = 2; i < contribuyentes.size(); i++) {
                 if (contribuyentes.get(i).getIdContribuyente() != 0) {
                     String nifnie = contribuyentes.get(i).getNifnie();
-                    comprobarDNI(nifnie, contribuyentes.get(i), document, contribuyentesElem);
+                    comprobarDNI(nifnie, contribuyentes.get(i), document, contribuyentesElem, listanifnies);
                     comprobarCCC(contribuyentes.get(i), documentCcc, cuentasElem);
                 } else {
                     System.out.println("Línea en blanco");
                 }
 
-            }
-            for (int i = 2; i < contribuyentes.size(); i++) {
-                if (contribuyentes.get(i).getIdContribuyente() != 0) {
-                    if (!listanifnies.containsValue(contribuyentes.get(i).getNifnie())) {
-                        listanifnies.put(contribuyentes.get(i).getIdContribuyente(), contribuyentes.get(i).getNifnie());
-                    } else {
-                        crearXMLNifnie(contribuyentes.get(i), document, contribuyentesElem);
-                    }
-                }
             }
 
             if (document.getDocumentElement() == null) {
@@ -100,10 +91,10 @@ public class Practicasistemas {
             System.out.println(e);
         }
     }
-    public static void comprobarDNI(String nifnie, Contribuyente contribuyente, Document document, Element contribuyentesElem) {
+    public static void comprobarDNI(String nifnie, Contribuyente contribuyente, Document document, Element contribuyentesElem, Map listanifnies) {
         String letter = "TRWAGMYFPDXBNJZSQVHLCKE";
         String dniNieRaw = nifnie;
-
+        
         if (dniNieRaw.length() != 9) {
             System.out.println("DNI o NIE introducido no correcto. (Longitud erronea)");
             crearXMLNifnie(contribuyente, document, contribuyentesElem);
@@ -162,6 +153,11 @@ public class Practicasistemas {
             String dniCorregido = dniNie + check;
             contribuyente.setNifnie(dniCorregido);
             ExcelManager.setNewContribuyente("./resources/SistemasAgua.xlsx", contribuyente);
+        }
+        if (!listanifnies.containsValue(contribuyente.getNifnie())) {
+            listanifnies.put(contribuyente.getIdContribuyente(), contribuyente.getNifnie());
+        } else {
+            crearXMLNifnie(contribuyente, document, contribuyentesElem);
         }
     }
 
@@ -236,7 +232,7 @@ public class Practicasistemas {
 
         Element apellidos = documentCcc.createElement("Apellidos");
         if (contribuyente.getApellido1() != null) {
-            Text apellido1T = documentCcc.createTextNode(contribuyente.getApellido1());
+            Text apellido1T = documentCcc.createTextNode(contribuyente.getApellido1() + " ");
             apellidos.appendChild(apellido1T);
         } else {
             Text apellido1T = documentCcc.createTextNode("");
@@ -372,21 +368,22 @@ public class Practicasistemas {
         boolean check = false;
 
         //Comprobamos si coincide el número de control válido con el existente, en caso de no coincidir subsana.
-        if(Character.getNumericValue(control.charAt(0)) != firstDigit){
+        char firstDigitStr = String.valueOf(firstDigit).charAt(0);
+        if(Character.getNumericValue(control.charAt(0)) != Character.getNumericValue(firstDigitStr)){
             System.out.println("El primer dígito de control no es correcto.");
             CorrectedCCC[8] = String.valueOf(firstDigit).charAt(0);
             check = true;
 
         }
-
-        if(Character.getNumericValue(control.charAt(1)) != secondDigit){
+        char secondDigitStr = String.valueOf(secondDigit).charAt(0);
+        if(Character.getNumericValue(control.charAt(1)) != Character.getNumericValue(secondDigitStr)){
             System.out.println("El segundo dígito de control no es correcto.");
             CorrectedCCC[9] = String.valueOf(secondDigit).charAt(0);
             check = true;
         }
 
         
-        CorrectedCCCStd = Arrays.toString(CorrectedCCC);
+        CorrectedCCCStd = new String(CorrectedCCC);
 
         //Obtenemos un array de chars a partir del CCC e implementando los números de las letras del país
         char[] IBAN = new char[26];
@@ -422,10 +419,14 @@ public class Practicasistemas {
         BigInteger IBANModule = IBANNum.mod(BigInteger.valueOf(97));
 
         int diff = 98 - IBANModule.intValue();
-        char[] conv = new char[Integer.toString(diff).length()];
+        char[] conv = new char[2];
 
         for (int i = 0; i < Integer.toString(diff).length(); i++) {
             conv[i] = Integer.toString(diff).charAt(i);
+        }
+        if(conv[1] == '\u0000'){
+            conv[1] = conv[0];
+            conv[0] = '0';
         }
 
         //Comprobamos si los dígitos de control obtenidos son válidos.
@@ -445,6 +446,9 @@ public class Practicasistemas {
         }
         contribuyente.setIban(correctedIBAN.toString());
         if(check){crearXMLccc(contribuyente, documentCcc, cuentasElem);}
+        contribuyente.setCcc(CorrectedCCCStd);
+        ExcelManager.setNewCCCIBAN("./resources/SistemasAgua.xlsx", contribuyente);
+        
         //System.out.println(Arrays.toString(nrbeOfficeCheck) + "\n" + Arrays.toString(idCheck) + "\n" + firstDigit + "\n" + secondDigit + "\n" + Arrays.toString(CorrectedCCC) + "\n" + correctedIBAN);
     
     }

@@ -111,4 +111,37 @@ public class ExcelManager {
         
         }
     }
+    
+    public static void setNewCCCIBAN(String archivo, Contribuyente contribuyente){
+        try {
+            FileInputStream inputExcel = new FileInputStream(new File(archivo));
+            Workbook workbook = new XSSFWorkbook(inputExcel);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for(int i = 1; i < sheet.getLastRowNum(); i++){
+                Row row = sheet.getRow(i);
+                if(row != null){
+                    if(contribuyente.getIdContribuyente() == row.getRowNum()+1){
+                        Cell cellCCC = row.getCell(7);
+                        cellCCC.setCellValue(contribuyente.getCcc());
+                        Cell cellIBAN = row.createCell(8);
+                        cellIBAN.setCellValue(contribuyente.getIban());
+                    }
+                }
+            }
+            
+            FileOutputStream fileOutput = null;
+            File file;
+
+            file = new File(archivo);
+            fileOutput = new FileOutputStream(file);
+
+            workbook.write(fileOutput);
+            workbook.close();
+
+            fileOutput.close();
+        } catch (Exception e){
+        
+        }
+    }
 }
