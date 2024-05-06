@@ -7,6 +7,7 @@
 package practicasistemas;
 
 import POJOS.Contribuyente;
+import POJOS.Ordenanza;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Arrays;
@@ -27,7 +28,7 @@ import javax.xml.transform.dom.DOMSource;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigInteger;
-
+import java.util.Scanner;
 /**
  *
  * @author Guille & Ovi 😎
@@ -39,7 +40,12 @@ public class Practicasistemas {
      */
     public static void main(String[] args) {
         Map < Integer, Contribuyente > contribuyentes = new LinkedHashMap < > ();
+        Map < Integer, Ordenanza > ordenanzas = new LinkedHashMap < > ();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Introduce el trimestre y año del que se desean generar recibos: ");
+        String trimestre = scanner.nextLine();
         try {
+            //Errores DNI XML
             DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = builderFactory.newDocumentBuilder();
             DOMImplementation domImplementation = builder.getDOMImplementation();
@@ -47,7 +53,7 @@ public class Practicasistemas {
             Document document = domImplementation.createDocument(null, null, null);
             document.setXmlVersion("1.0");
             Element contribuyentesElem = document.createElement("Contribuyentes");
-
+            //Errores CCC XML
             DocumentBuilderFactory builderFactoryCcc = DocumentBuilderFactory.newInstance();
             DocumentBuilder builderCcc = builderFactoryCcc.newDocumentBuilder();
             DOMImplementation domImplementationCcc = builderCcc.getDOMImplementation();
@@ -55,9 +61,18 @@ public class Practicasistemas {
             Document documentCcc = domImplementationCcc.createDocument(null, null, null);
             documentCcc.setXmlVersion("1.0");
             Element cuentasElem = documentCcc.createElement("Cuentas");
+            //Recibos XML
+            DocumentBuilderFactory builderFactoryRecib = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builderRecib = builderFactoryRecib.newDocumentBuilder();
+            DOMImplementation domImplementationRecib = builderRecib.getDOMImplementation();
+
+            Document documentRecib = domImplementationRecib.createDocument(null, null, null);
+            documentCcc.setXmlVersion("1.0");
+            Element recibosElem = documentRecib.createElement("Recibos");
 
 
             contribuyentes = ExcelManager.getContribuyentesExcel("./resources/SistemasAgua.xlsx");
+            ordenanzas = ExcelManager.getOrdenanzasExcel("./resources/SistemasAgua.xlsx");
             Map < Integer, String > listanifnies = new LinkedHashMap < > ();
             for (int i = 2; i < contribuyentes.size(); i++) {
                 if (contribuyentes.get(i).getIdContribuyente() != 0) {
@@ -69,7 +84,7 @@ public class Practicasistemas {
                 }
 
             }
-
+            //Errores DNI XML
             if (document.getDocumentElement() == null) {
                 document.appendChild(contribuyentesElem);
             }
@@ -78,7 +93,7 @@ public class Practicasistemas {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.transform(source, result);
-
+            //Errores CCC XML
             if (documentCcc.getDocumentElement() == null) {
                 documentCcc.appendChild(cuentasElem);
             }
@@ -87,6 +102,15 @@ public class Practicasistemas {
             Transformer transformerCcc = TransformerFactory.newInstance().newTransformer();
             transformerCcc.setOutputProperty(OutputKeys.INDENT, "yes");
             transformerCcc.transform(sourceCcc, resultCcc);
+            //Recibos XML
+            if (documentRecib.getDocumentElement() == null) {
+                documentRecib.appendChild(recibosElem);
+            }
+            Source sourceRecib = new DOMSource(documentRecib);
+            Result resultRecib = new StreamResult(new File("./resources/Recibos.xml"));
+            Transformer transformerRecib = TransformerFactory.newInstance().newTransformer();
+            transformerRecib.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformerRecib.transform(sourceRecib, resultRecib);
         } catch (Exception e) {
             System.out.println(e);
         }
