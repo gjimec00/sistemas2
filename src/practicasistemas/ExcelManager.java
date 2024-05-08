@@ -21,6 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.File;
 import POJOS.Ordenanza;
+import java.util.HashSet;
+import java.util.Set;
 /**
  *
  * @author Guille
@@ -80,16 +82,33 @@ public class ExcelManager {
             contribuyente.setCcc(row.getCell(7).toString());
         } 
         if(row.getCell(10) != null){
-            contribuyente.setExencion(row.getCell(10).toString());
+            contribuyente.setExencion(row.getCell(10).toString().charAt(0));
         }
         if(row.getCell(11) != null){
-            contribuyente.setBonificacion(row.getCell(11).toString());
+            contribuyente.setBonificacion(Double.parseDouble(row.getCell(11).toString()));
         }
+        Set lecturas = new HashSet();
         if(row.getCell(12) != null){
-            contribuyente.setBonificacion(row.getCell(12).toString());
+            lecturas.add(row.getCell(12).toString());
         }
         if(row.getCell(13) != null){
-            contribuyente.setExencion(row.getCell(13).toString());
+            lecturas.add(row.getCell(13).toString());
+        }
+        contribuyente.setLecturases(lecturas);
+        if(row.getCell(14) != null){
+            contribuyente.setFechaAlta(row.getCell(14).getDateCellValue());
+        }
+        if(row.getCell(15) != null){
+            contribuyente.setFechaBaja(row.getCell(15).getDateCellValue());
+        }
+        if(row.getCell(16) != null){
+            String conceptos = row.getCell(16).toString();
+            String conceptosSinEsp = conceptos.trim();
+            Set ordenanzas = new HashSet();
+            for(int i = 0; i < conceptosSinEsp.length(); i++){
+                ordenanzas.add(conceptosSinEsp.charAt(i));
+            }
+            contribuyente.setRelContribuyenteOrdenanzas(ordenanzas);
         }
         return contribuyente;
     }

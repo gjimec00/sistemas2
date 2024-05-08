@@ -476,4 +476,17 @@ public class Practicasistemas {
         //System.out.println(Arrays.toString(nrbeOfficeCheck) + "\n" + Arrays.toString(idCheck) + "\n" + firstDigit + "\n" + secondDigit + "\n" + Arrays.toString(CorrectedCCC) + "\n" + correctedIBAN);
     
     }
+    public static void generarRecibo(Contribuyente contribuyente, Map < Integer, Ordenanza > ordenanzas){
+        List<String> lecturas = new ArrayList<>(contribuyente.getLecturases());
+        int diferenciaLecturas = Integer.parseInt(lecturas.get(1)) - Integer.parseInt(lecturas.get(0));
+        List<String> conceptosCobrar = new ArrayList<>(contribuyente.getRelContribuyenteOrdenanzas());
+        for(int i = 0; i < contribuyente.getRelContribuyenteOrdenanzas().size(); i++){
+            for(int j = 0; j < ordenanzas.size(); i++){
+                if(Integer.parseInt(conceptosCobrar.get(i)) == ordenanzas.get(j).getIdOrdenanza()){
+                
+                }
+            }
+        }
+    
+    }
 }
