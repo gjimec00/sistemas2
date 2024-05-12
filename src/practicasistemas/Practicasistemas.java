@@ -43,7 +43,7 @@ public class Practicasistemas {
         Map < Integer, Ordenanza > ordenanzas = new LinkedHashMap < > ();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Introduce el trimestre y año del que se desean generar recibos: ");
-        String trimestre = scanner.nextLine();
+        //String trimestre = scanner.nextLine();
         try {
             //Errores DNI XML
             DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
@@ -79,6 +79,7 @@ public class Practicasistemas {
                     String nifnie = contribuyentes.get(i).getNifnie();
                     comprobarDNI(nifnie, contribuyentes.get(i), document, contribuyentesElem, listanifnies);
                     comprobarCCC(contribuyentes.get(i), documentCcc, cuentasElem);
+                    generarRecibo(contribuyentes.get(i), ordenanzas);
                 } else {
                     System.out.println("Línea en blanco");
                 }
@@ -478,12 +479,42 @@ public class Practicasistemas {
     }
     public static void generarRecibo(Contribuyente contribuyente, Map < Integer, Ordenanza > ordenanzas){
         List<String> lecturas = new ArrayList<>(contribuyente.getLecturases());
-        int diferenciaLecturas = Integer.parseInt(lecturas.get(1)) - Integer.parseInt(lecturas.get(0));
-        List<String> conceptosCobrar = new ArrayList<>(contribuyente.getRelContribuyenteOrdenanzas());
-        for(int i = 0; i < contribuyente.getRelContribuyenteOrdenanzas().size(); i++){
-            for(int j = 0; j < ordenanzas.size(); i++){
-                if(Integer.parseInt(conceptosCobrar.get(i)) == ordenanzas.get(j).getIdOrdenanza()){
+        if(lecturas.size() == 1){
+            lecturas.add("0");
+        }
+        double diferenciaLecturas = Math.abs(Double.parseDouble(lecturas.get(1)) - Double.parseDouble(lecturas.get(0)));
+
+        List<Character> conceptosCobrar = new ArrayList<>(contribuyente.getRelContribuyenteOrdenanzas());
+        if(conceptosCobrar.get(0) == ' '){
+            conceptosCobrar.remove(0);
+        }
+
+        double costeTotal = 0;
+        for(int i = 0; i < conceptosCobrar.size(); i++){
+            for(int j = 2; j < ordenanzas.size(); j++){
+
+                if(Integer.parseInt(conceptosCobrar.get(i).toString()) == ordenanzas.get(j).getIdOrdenanza()){
                 
+                    if(ordenanzas.get(j).getSubconcepto().equals("Fijo")){
+                        costeTotal = ordenanzas.get(j).getPrecioFijo();
+                        diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
+                        if(diferenciaLecturas < 0){
+                            diferenciaLecturas = 0;
+                        }
+                    }
+                    
+                    if(ordenanzas.get(j).getSubconcepto().contains("tramo") && ordenanzas.get(j).getAcumulable().equals("N")){
+                        int metrosUsados = 0;
+                        double costeTramo = 0;
+                        while(diferenciaLecturas > 0 && metrosUsados != ordenanzas.get(j).getM3incluidos()){
+                            costeTramo = costeTramo + ordenanzas.get(j).getPreciom3() * 1;
+                            metrosUsados++;
+                            diferenciaLecturas--;
+                        }
+                        costeTotal = costeTotal + costeTramo;
+                    }
+                    //double iva = ordenanzas.get(j).getIva() / 100 * costeTotal;
+                    System.out.println(costeTotal + " " + ordenanzas.get(j).getSubconcepto() + " " + diferenciaLecturas);
                 }
             }
         }
