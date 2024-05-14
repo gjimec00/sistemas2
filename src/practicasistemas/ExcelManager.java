@@ -103,11 +103,12 @@ public class ExcelManager {
         }
         if(row.getCell(16) != null){
             String conceptos = row.getCell(16).toString();
-            String conceptosSinEsp = conceptos.trim();
+            String[] subcadenas = conceptos.split("\\s+");
             Set ordenanzas = new HashSet();
-            for(int i = 0; i < conceptosSinEsp.length(); i++){
-                ordenanzas.add(conceptosSinEsp.charAt(i));
+            for(String subcadena : subcadenas){
+                ordenanzas.add(subcadena);
             }
+            ordenanzas.remove(' ');
             contribuyente.setRelContribuyenteOrdenanzas(ordenanzas);
         }
         return contribuyente;

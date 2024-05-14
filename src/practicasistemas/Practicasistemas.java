@@ -478,45 +478,84 @@ public class Practicasistemas {
     
     }
     public static void generarRecibo(Contribuyente contribuyente, Map < Integer, Ordenanza > ordenanzas){
+        System.out.println(contribuyente.getNombre());
         List<String> lecturas = new ArrayList<>(contribuyente.getLecturases());
         if(lecturas.size() == 1){
             lecturas.add("0");
         }
         double diferenciaLecturas = Math.abs(Double.parseDouble(lecturas.get(1)) - Double.parseDouble(lecturas.get(0)));
 
-        List<Character> conceptosCobrar = new ArrayList<>(contribuyente.getRelContribuyenteOrdenanzas());
-        if(conceptosCobrar.get(0) == ' '){
-            conceptosCobrar.remove(0);
-        }
+        List<String> conceptosCobrar = new ArrayList<>(contribuyente.getRelContribuyenteOrdenanzas());
+
 
         double costeTotal = 0;
+
+
         for(int i = 0; i < conceptosCobrar.size(); i++){
+            int metrosAcumulados = 0;
+            double costeConcepto = 0;
+            double costeTramo = 0;
             for(int j = 2; j < ordenanzas.size(); j++){
 
                 if(Integer.parseInt(conceptosCobrar.get(i).toString()) == ordenanzas.get(j).getIdOrdenanza()){
-                
-                    if(ordenanzas.get(j).getSubconcepto().equals("Fijo")){
-                        costeTotal = ordenanzas.get(j).getPrecioFijo();
-                        diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
+                    //System.out.println(ordenanzas.get(j).getAcumulable() + "\n" + ordenanzas.get(j).getPrecioFijo() + "\n" + conceptosCobrar.get(i).toString());
+                    if(ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getM3incluidos() != null){
+                        costeTramo += ordenanzas.get(j).getPrecioFijo();
+                        if(ordenanzas.get(j).getAcumulable().equals("S")){
+                            metrosAcumulados += ordenanzas.get(j).getM3incluidos();
+                            if(metrosAcumulados > diferenciaLecturas){
+                                diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
+                            }
+                        }else{
+                            diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
+                        }
+                        
                         if(diferenciaLecturas < 0){
                             diferenciaLecturas = 0;
                         }
                     }
                     
+                    if(ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getM3incluidos() == null && ordenanzas.get(j).getPorcentaje() == null){
+                        costeTramo += ordenanzas.get(j).getPrecioFijo();
+                    }
+
+                    if(ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getM3incluidos() == null && ordenanzas.get(j).getPorcentaje() != null){
+                        //Si el conceptoCobrar es mayor que el idOrdenanza que tenemos, añadir al final de la lista la ordenanza
+                        //para que la cobre cuando ya haya calculado el concepto siguiente
+                    }
+                    
+                    if(ordenanzas.get(j).getSubconcepto().contains("Desagüe")){
+                    
+                    }
+
                     if(ordenanzas.get(j).getSubconcepto().contains("tramo") && ordenanzas.get(j).getAcumulable().equals("N")){
                         int metrosUsados = 0;
-                        double costeTramo = 0;
                         while(diferenciaLecturas > 0 && metrosUsados != ordenanzas.get(j).getM3incluidos()){
                             costeTramo = costeTramo + ordenanzas.get(j).getPreciom3() * 1;
                             metrosUsados++;
                             diferenciaLecturas--;
                         }
-                        costeTotal = costeTotal + costeTramo;
                     }
+                    
+                    if(ordenanzas.get(j).getSubconcepto().contains("tramo") && ordenanzas.get(j).getAcumulable().equals("S")){
+                        int metrosUsados = 0;     
+                        metrosAcumulados += ordenanzas.get(j).getM3incluidos();
+                        if(diferenciaLecturas < metrosAcumulados){
+                            while(diferenciaLecturas > 0 && metrosUsados != metrosAcumulados){
+                                costeTramo += ordenanzas.get(j).getPreciom3() * 1;
+                                metrosUsados++;
+                                diferenciaLecturas--;
+                            }
+                        }
+                    }
+
                     //double iva = ordenanzas.get(j).getIva() / 100 * costeTotal;
-                    System.out.println(costeTotal + " " + ordenanzas.get(j).getSubconcepto() + " " + diferenciaLecturas);
+                    
                 }
             }
+            costeConcepto += costeTramo;
+            costeTotal += costeConcepto;
+            System.out.println(costeConcepto);
         }
     
     }
