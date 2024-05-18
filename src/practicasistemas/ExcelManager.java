@@ -203,7 +203,7 @@ public class ExcelManager {
         Ordenanza ordenanza = new Ordenanza();
         ordenanza.setId(id);
         ordenanza.setIdOrdenanza((int) Double.parseDouble(row.getCell(2).toString()));
-
+        
         if(row.getCell(0) != null){
             ordenanza.setPueblo(row.getCell(0).toString());
         }
