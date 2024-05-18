@@ -30,7 +30,8 @@ public class Contribuyente  implements java.io.Serializable {
      private Set reciboses = new HashSet(0);
      private Set lecturases = new HashSet(0);
      private Set relContribuyenteOrdenanzas = new HashSet(0);
-
+     private double baseImponible;
+     private double ivaRecibo;
     public Contribuyente() {
     }
 
@@ -191,7 +192,21 @@ public class Contribuyente  implements java.io.Serializable {
         this.relContribuyenteOrdenanzas = relContribuyenteOrdenanzas;
     }
 
+    public Double getBaseImponible() {
+        return this.baseImponible;
+    }
+    
+    public void setBaseImponible(Double baseImponible) {
+        this.baseImponible = baseImponible;
+    }
 
+    public Double getIvaRecibo() {
+        return this.ivaRecibo;
+    }
+    
+    public void setIvaRecibo(Double ivaRecibo) {
+        this.ivaRecibo = ivaRecibo;
+    }
 
 
 }

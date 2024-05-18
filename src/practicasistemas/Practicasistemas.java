@@ -30,6 +30,9 @@ import java.util.List;
 import java.math.BigInteger;
 import java.util.Scanner;
 import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Scanner;
 
 /**
  *
@@ -40,12 +43,26 @@ public class Practicasistemas {
     /**
      * @param args the command line arguments
      */
+    public static int contador = 0;
+    public static double totalBaseImponible = 0;
+    public static double totalIva = 0;
     public static void main(String[] args) {
         Map < Integer, Contribuyente > contribuyentes = new LinkedHashMap < > ();
         Map < Integer, Ordenanza > ordenanzas = new LinkedHashMap < > ();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Introduce el trimestre y año del que se desean generar recibos: ");
-        //String trimestre = scanner.nextLine();
+        String input = scanner.nextLine();
+        String trimestre = input.substring(0,2);
+        int year = Integer.parseInt(input.substring(3));
+        Date fechaFinTr;
+        if(trimestre.equals("1T")){
+            fechaFinTr = getLastDayOfTrimestre(year, Calendar.APRIL);
+        }else if(trimestre.equals("2T")){
+            fechaFinTr = getLastDayOfTrimestre(year, Calendar.AUGUST);
+        }else{
+            fechaFinTr = getLastDayOfTrimestre(year, Calendar.DECEMBER);
+        }
+        System.out.println(fechaFinTr);
         try {
             //Errores DNI XML
             DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
@@ -71,6 +88,7 @@ public class Practicasistemas {
             Document documentRecib = domImplementationRecib.createDocument(null, null, null);
             documentCcc.setXmlVersion("1.0");
             Element recibosElem = documentRecib.createElement("Recibos");
+            recibosElem.setAttribute("fechaPadron", trimestre + " de " + year);
 
 
             contribuyentes = ExcelManager.getContribuyentesExcel("./resources/SistemasAgua.xlsx");
@@ -79,9 +97,9 @@ public class Practicasistemas {
             for (int i = 2; i < contribuyentes.size(); i++) {
                 if (contribuyentes.get(i).getIdContribuyente() != 0) {
                     String nifnie = contribuyentes.get(i).getNifnie();
-                    comprobarDNI(nifnie, contribuyentes.get(i), document, contribuyentesElem, listanifnies);
                     comprobarCCC(contribuyentes.get(i), documentCcc, cuentasElem);
-                    generarRecibo(contribuyentes.get(i), ordenanzas);
+                    comprobarDNI(nifnie, contribuyentes.get(i), document, contribuyentesElem, listanifnies, ordenanzas, fechaFinTr, documentRecib, recibosElem);
+
                 } else {
                     System.out.println("Línea en blanco");
                 }
@@ -106,6 +124,10 @@ public class Practicasistemas {
             transformerCcc.setOutputProperty(OutputKeys.INDENT, "yes");
             transformerCcc.transform(sourceCcc, resultCcc);
             //Recibos XML
+            recibosElem.setAttribute("totalBaseImponible", Double.toString(totalBaseImponible));
+            recibosElem.setAttribute("totalIva", Double.toString(totalIva));
+            double totalRecibos = totalBaseImponible + totalIva;
+            recibosElem.setAttribute("totalRecibos", Double.toString(totalRecibos));
             if (documentRecib.getDocumentElement() == null) {
                 documentRecib.appendChild(recibosElem);
             }
@@ -118,7 +140,7 @@ public class Practicasistemas {
             System.out.println(e);
         }
     }
-    public static void comprobarDNI(String nifnie, Contribuyente contribuyente, Document document, Element contribuyentesElem, Map listanifnies) {
+    public static void comprobarDNI(String nifnie, Contribuyente contribuyente, Document document, Element contribuyentesElem, Map listanifnies, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem) {
         String letter = "TRWAGMYFPDXBNJZSQVHLCKE";
         String dniNieRaw = nifnie;
         
@@ -175,6 +197,7 @@ public class Practicasistemas {
 
         if (dniNieLetter == check) {
             System.out.println("DNI correcto.");
+            generarRecibo(contribuyente, ordenanzas, fechaFinTr, documentRecib, recibosElem);
         } else {
             System.out.println("DNI incorrecto, Error subsanable.");
             String dniCorregido = dniNie + check;
@@ -479,12 +502,13 @@ public class Practicasistemas {
         //System.out.println(Arrays.toString(nrbeOfficeCheck) + "\n" + Arrays.toString(idCheck) + "\n" + firstDigit + "\n" + secondDigit + "\n" + Arrays.toString(CorrectedCCC) + "\n" + correctedIBAN);
     
     }
-    public static void generarRecibo(Contribuyente contribuyente, Map < Integer, Ordenanza > ordenanzas){
+    public static void generarRecibo(Contribuyente contribuyente, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem){
+        if(fechaFinTr.after(contribuyente.getFechaAlta()) && (contribuyente.getFechaBaja() == null || contribuyente.getFechaBaja().after(fechaFinTr))){
         DecimalFormat df = new DecimalFormat("0.000");
         System.out.println(contribuyente.getNombre());
         List<String> lecturas = new ArrayList<>(contribuyente.getLecturases());
         if(lecturas.size() == 1){
-            lecturas.add("0");
+            lecturas.add(lecturas.get(0));
         }
         double diferenciaLecturas = Math.abs(Double.parseDouble(lecturas.get(1)) - Double.parseDouble(lecturas.get(0)));
 
@@ -508,6 +532,7 @@ public class Practicasistemas {
                     //System.out.println(ordenanzas.get(j).getAcumulable() + "\n" + ordenanzas.get(j).getPrecioFijo() + "\n" + conceptosCobrar.get(i).toString());
                     if(ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getM3incluidos() != null){
                         costeTramo += ordenanzas.get(j).getPrecioFijo();
+                        if(ordenanzas.get(j).getAcumulable() != null){
                         if(ordenanzas.get(j).getAcumulable().equals("S")){
                             metrosAcumulados += ordenanzas.get(j).getM3incluidos();
                             if(metrosAcumulados > diferenciaLecturas){
@@ -516,7 +541,7 @@ public class Practicasistemas {
                         }else{
                             diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
                         }
-                        
+                        }
                         if(diferenciaLecturas < 0){
                             diferenciaLecturas = 0;
                         }
@@ -631,9 +656,199 @@ public class Practicasistemas {
                 listaConceptos.put(String.valueOf(diferido), costeConceptoSinD);
             
         }
+        contribuyente.setBaseImponible(costeTotal);
+        totalBaseImponible += costeTotal;
+        contribuyente.setIvaRecibo(ivaTotal);
+        totalIva += ivaTotal;
         System.out.println(contribuyente.getNombre() + " sin iva: " + costeTotal + " iva: " + ivaTotal);
         costeTotal += ivaTotal;
+        if(contribuyente.getExencion().equals('S')){
+            costeTotal = 0;
+        }
         System.out.println(contribuyente.getNombre() + ": " + costeTotal);
+        crearXMLRecibos(contribuyente, documentRecib, recibosElem);
+        }
     
+    }
+    public static void crearXMLRecibos(Contribuyente contribuyente, Document documentRecib, Element recibosElem){
+        contador++;
+        Element reciboElem = documentRecib.createElement("Recibo");
+        reciboElem.setAttribute("idRecibo", Integer.toString(contador));
+
+        if (contribuyente.getExencion() != null) {
+            Element exencion = documentRecib.createElement("Exencion");
+            Text exencionT = documentRecib.createTextNode(contribuyente.getExencion().toString());
+            exencion.appendChild(exencionT);
+            reciboElem.appendChild(exencion);
+        } else {
+            Element exencion = documentRecib.createElement("Exencion");
+            Text exencionT = documentRecib.createTextNode("");
+            exencion.appendChild(exencionT);
+            reciboElem.appendChild(exencion);
+        }
+
+        if (contribuyente.getIdContribuyente() != 0) {
+            Element idFila = documentRecib.createElement("idFilaExcel");
+            Text idFilaT = documentRecib.createTextNode(Integer.toString(contribuyente.getIdContribuyente()));
+            idFila.appendChild(idFilaT);
+            reciboElem.appendChild(idFila);
+        } else {
+            Element idFila = documentRecib.createElement("idFilaExcel");
+            Text idFilaT = documentRecib.createTextNode("");
+            idFila.appendChild(idFilaT);
+            reciboElem.appendChild(idFila);
+        }
+        if (contribuyente.getNombre() != null) {
+            Element nombre = documentRecib.createElement("nombre");
+            Text nombreT = documentRecib.createTextNode(contribuyente.getNombre());
+            nombre.appendChild(nombreT);
+            reciboElem.appendChild(nombre);
+        } else {
+            Element nombre = documentRecib.createElement("nombre");
+            Text nombreT = documentRecib.createTextNode("");
+            nombre.appendChild(nombreT);
+            reciboElem.appendChild(nombre);
+        }
+
+        if (contribuyente.getApellido1() != null) {
+            Element apellido1 = documentRecib.createElement("primerApellido");
+            Text apellido1T = documentRecib.createTextNode(contribuyente.getApellido1());
+            apellido1.appendChild(apellido1T);
+            reciboElem.appendChild(apellido1);
+        } else {
+            Element apellido1 = documentRecib.createElement("primerApellido");
+            Text apellido1T = documentRecib.createTextNode("");
+            apellido1.appendChild(apellido1T);
+            reciboElem.appendChild(apellido1);
+        }
+
+        if (contribuyente.getApellido2() != null) {
+            Element apellido2 = documentRecib.createElement("segundoApellido");
+            Text apellido2T = documentRecib.createTextNode(contribuyente.getApellido2());
+            apellido2.appendChild(apellido2T);
+            reciboElem.appendChild(apellido2);
+        } else {
+            Element apellido2 = documentRecib.createElement("segundoApellido");
+            Text apellido2T = documentRecib.createTextNode("");
+            apellido2.appendChild(apellido2T);
+            reciboElem.appendChild(apellido2);
+        }
+
+        if (contribuyente.getNifnie() != null) {
+            Element nifnie = documentRecib.createElement("NIF");
+            Text nifnieT = documentRecib.createTextNode(contribuyente.getNifnie());
+            nifnie.appendChild(nifnieT);
+            reciboElem.appendChild(nifnie);
+        } else {
+            Element nifnie = documentRecib.createElement("NIF");
+            Text nifnieT = documentRecib.createTextNode("");
+            nifnie.appendChild(nifnieT);
+            reciboElem.appendChild(nifnie);
+        }
+
+        if (contribuyente.getIban() != null) {
+            Element iban = documentRecib.createElement("IBAN");
+            Text ibanT = documentRecib.createTextNode(contribuyente.getIban());
+            iban.appendChild(ibanT);
+            reciboElem.appendChild(iban);
+        } else {
+            Element iban = documentRecib.createElement("IBAN");
+            Text ibanT = documentRecib.createTextNode("");
+            iban.appendChild(ibanT);
+            reciboElem.appendChild(iban);
+        }
+
+        List<String> lecturas = new ArrayList<>(contribuyente.getLecturases());
+        if(lecturas.size() == 1){
+            lecturas.add(lecturas.get(0));
+        }
+        if(Double.parseDouble(lecturas.get(1)) < Double.parseDouble(lecturas.get(0))){
+            String aux = lecturas.get(0);
+            lecturas.set(0, lecturas.get(1));
+            lecturas.set(1, aux);
+        }
+        if (lecturas.get(1) != null) {
+            Element lecturaAct = documentRecib.createElement("lecturaActual");
+            Text lecturaActT = documentRecib.createTextNode(lecturas.get(1));
+            lecturaAct.appendChild(lecturaActT);
+            reciboElem.appendChild(lecturaAct);
+        } else {
+            Element lecturaAct = documentRecib.createElement("lecturaActual");
+            Text lecturaActT = documentRecib.createTextNode("");
+            lecturaAct.appendChild(lecturaActT);
+            reciboElem.appendChild(lecturaAct);
+        }
+
+        if (lecturas.get(0) != null) {
+            Element lecturaAnt = documentRecib.createElement("lecturaAnterior");
+            Text lecturaAntT = documentRecib.createTextNode(lecturas.get(0));
+            lecturaAnt.appendChild(lecturaAntT);
+            reciboElem.appendChild(lecturaAnt);
+        } else {
+            Element lecturaAnt = documentRecib.createElement("lecturaAnterior");
+            Text lecturaAntT = documentRecib.createTextNode("");
+            lecturaAnt.appendChild(lecturaAntT);
+            reciboElem.appendChild(lecturaAnt);
+        }
+
+        if (lecturas.get(0) != null && lecturas.get(1) != null) {
+            Element consumo = documentRecib.createElement("consumo");
+            Double consumoD = Double.parseDouble(lecturas.get(1)) - Double.parseDouble(lecturas.get(0));
+            Text consumoT = documentRecib.createTextNode(consumoD.toString());
+            consumo.appendChild(consumoT);
+            reciboElem.appendChild(consumo);
+        } else {
+            Element consumo = documentRecib.createElement("consumo");
+            Text consumoT = documentRecib.createTextNode("");
+            consumo.appendChild(consumoT);
+            reciboElem.appendChild(consumo);
+        }
+        
+        if (contribuyente.getBaseImponible() != null) {
+            Element base = documentRecib.createElement("baseImponibleRecibo");
+            Text baseT = documentRecib.createTextNode(contribuyente.getBaseImponible().toString());
+            base.appendChild(baseT);
+            reciboElem.appendChild(base);
+        } else {
+            Element base = documentRecib.createElement("baseImponibleRecibo");
+            Text baseT = documentRecib.createTextNode("");
+            base.appendChild(baseT);
+            reciboElem.appendChild(base);
+        }
+
+        if (contribuyente.getIvaRecibo() != null) {
+            Element iva = documentRecib.createElement("ivaRecibo");
+            Text ivaT = documentRecib.createTextNode(contribuyente.getIvaRecibo().toString());
+            iva.appendChild(ivaT);
+            reciboElem.appendChild(iva);
+        } else {
+            Element iva = documentRecib.createElement("ivaRecibo");
+            Text ivaT = documentRecib.createTextNode("");
+            iva.appendChild(ivaT);
+            reciboElem.appendChild(iva);
+        }
+
+        if (contribuyente.getIvaRecibo() != null && contribuyente.getBaseImponible() != null) {
+            Element total = documentRecib.createElement("totalRecibo");
+            Double totalD = contribuyente.getBaseImponible() + contribuyente.getIvaRecibo();
+            Text totalT = documentRecib.createTextNode(totalD.toString());
+            total.appendChild(totalT);
+            reciboElem.appendChild(total);
+        } else {
+            Element total = documentRecib.createElement("totalRecibo");
+            Text totalT = documentRecib.createTextNode("");
+            total.appendChild(totalT);
+            reciboElem.appendChild(total);
+        }
+        recibosElem.appendChild(reciboElem);
+    }
+    
+    private static Date getLastDayOfTrimestre(int year, int month) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        int lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        calendar.set(Calendar.DAY_OF_MONTH, lastDay);
+        return calendar.getTime();
     }
 }
