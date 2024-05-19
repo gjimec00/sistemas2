@@ -53,16 +53,16 @@ public class Practicasistemas {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Introduce el trimestre y año del que se desean generar recibos: ");
         String input = scanner.nextLine();
-        String trimestre = input.substring(0,2);
+        String trimestre = input.substring(0, 2);
         int year = Integer.parseInt(input.substring(3));
         Date fechaFinTr;
-        if(trimestre.equals("1T")){
+        if (trimestre.equals("1T")) {
             fechaFinTr = getLastDayOfTrimestre(year, Calendar.MARCH);
-        }else if(trimestre.equals("2T")){
+        } else if (trimestre.equals("2T")) {
             fechaFinTr = getLastDayOfTrimestre(year, Calendar.JUNE);
-        }else if(trimestre.equals("3T")){
+        } else if (trimestre.equals("3T")) {
             fechaFinTr = getLastDayOfTrimestre(year, Calendar.SEPTEMBER);
-        }else{
+        } else {
             fechaFinTr = getLastDayOfTrimestre(year, Calendar.DECEMBER);
         }
         System.out.println(fechaFinTr);
@@ -146,7 +146,7 @@ public class Practicasistemas {
     public static void comprobarDNI(String nifnie, Contribuyente contribuyente, Document document, Element contribuyentesElem, Map listanifnies, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem) {
         String letter = "TRWAGMYFPDXBNJZSQVHLCKE";
         String dniNieRaw = nifnie;
-        
+
         if (dniNieRaw.length() != 9) {
             System.out.println("DNI o NIE introducido no correcto. (Longitud erronea)");
             crearXMLNifnie(contribuyente, document, contribuyentesElem);
@@ -291,10 +291,10 @@ public class Practicasistemas {
             Text apellido1T = documentCcc.createTextNode("");
             apellidos.appendChild(apellido1T);
         }
-        if(contribuyente.getApellido2() != null){
+        if (contribuyente.getApellido2() != null) {
             Text apellido2T = documentCcc.createTextNode(contribuyente.getApellido2());
             apellidos.appendChild(apellido2T);
-        }else{
+        } else {
             Text apellido2T = documentCcc.createTextNode("");
             apellidos.appendChild(apellido2T);
         }
@@ -342,19 +342,46 @@ public class Practicasistemas {
 
     }
 
-    
-    public static void comprobarCCC(Contribuyente contribuyente, Document documentCcc, Element cuentasElem){
-    //Creación alfabeto
+
+    public static void comprobarCCC(Contribuyente contribuyente, Document documentCcc, Element cuentasElem) {
+        //Creación alfabeto
         String abcd = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        int[] abcdNum = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35};
+        int[] abcdNum = {
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35
+        };
         String CCC = contribuyente.getCcc();
         //Comprobación subsanabilidad
-        if(CCC.length() != 20){
+        if (CCC.length() != 20) {
             System.out.println("La longitud de la cuenta no es correcta.");
             crearXMLccc(contribuyente, documentCcc, cuentasElem);
             return;
         }
-        
+
         //Comprobación letras en CCC (en caso de haber no es subsanable)
         int lett = 0;
         do {
@@ -367,10 +394,21 @@ public class Practicasistemas {
         } while (lett != 20);
 
         //Obtención NRBE, Número de oficina, Número de control e ID.
-        String nrbe_office = CCC.substring(0,8);
-        String control = CCC.substring(8,10);
+        String nrbe_office = CCC.substring(0, 8);
+        String control = CCC.substring(8, 10);
         String id = CCC.substring(10);
-        int[] facts = {1, 2, 4, 8, 5, 10, 9, 7, 3, 6};
+        int[] facts = {
+            1,
+            2,
+            4,
+            8,
+            5,
+            10,
+            9,
+            7,
+            3,
+            6
+        };
 
         int[] nrbeOfficeCheck = new int[10];
         int[] idCheck = new int[10];
@@ -380,12 +418,12 @@ public class Practicasistemas {
         nrbeOfficeCheck[1] = 0;
 
         int CCCI = 0;
-        for(int i = 2; i < nrbeOfficeCheck.length; i++){
+        for (int i = 2; i < nrbeOfficeCheck.length; i++) {
             nrbeOfficeCheck[i] = Character.getNumericValue(nrbe_office.charAt(CCCI));
             CCCI++;
         }
 
-        for(int i = 0; i < idCheck.length; i++){
+        for (int i = 0; i < idCheck.length; i++) {
             idCheck[i] = Character.getNumericValue(id.charAt(i));
         }
 
@@ -393,11 +431,11 @@ public class Practicasistemas {
         int secondSum = 0;
 
         //Obtenemos las sumas totales de los dos números en conjunto para posteriormente obtener los dígitos.
-        for(int i = 0; i < nrbeOfficeCheck.length; i++){
+        for (int i = 0; i < nrbeOfficeCheck.length; i++) {
             firstSum += nrbeOfficeCheck[i] * facts[i];
         }
 
-        for(int i = 0; i < idCheck.length; i++){
+        for (int i = 0; i < idCheck.length; i++) {
             secondSum += idCheck[i] * facts[i];
         }
 
@@ -407,11 +445,11 @@ public class Practicasistemas {
         int firstDigit = 11 - firstRest;
         int secondDigit = 11 - secondRest;
 
-        if(firstDigit == 11){
+        if (firstDigit == 11) {
             firstDigit = 0;
         }
 
-        if(secondDigit == 11){
+        if (secondDigit == 11) {
             secondDigit = 0;
         }
 
@@ -422,20 +460,20 @@ public class Practicasistemas {
 
         //Comprobamos si coincide el número de control válido con el existente, en caso de no coincidir subsana.
         char firstDigitStr = String.valueOf(firstDigit).charAt(0);
-        if(Character.getNumericValue(control.charAt(0)) != Character.getNumericValue(firstDigitStr)){
+        if (Character.getNumericValue(control.charAt(0)) != Character.getNumericValue(firstDigitStr)) {
             System.out.println("El primer dígito de control no es correcto.");
             CorrectedCCC[8] = String.valueOf(firstDigit).charAt(0);
             check = true;
 
         }
         char secondDigitStr = String.valueOf(secondDigit).charAt(0);
-        if(Character.getNumericValue(control.charAt(1)) != Character.getNumericValue(secondDigitStr)){
+        if (Character.getNumericValue(control.charAt(1)) != Character.getNumericValue(secondDigitStr)) {
             System.out.println("El segundo dígito de control no es correcto.");
             CorrectedCCC[9] = String.valueOf(secondDigit).charAt(0);
             check = true;
         }
 
-        
+
         CorrectedCCCStd = new String(CorrectedCCC);
 
         //Obtenemos un array de chars a partir del CCC e implementando los números de las letras del país
@@ -446,7 +484,7 @@ public class Practicasistemas {
         char secondIbanLetter = contribuyente.getPaisCcc().charAt(1); //Crear String PaisCCC y PaisCCC.charAt(1)
 
         for (int i = 0; i < abcd.length(); i++) {
-            if(firstIbanLetter == abcd.charAt(i)){
+            if (firstIbanLetter == abcd.charAt(i)) {
                 int num = abcdNum[i];
                 for (int j = 0; j < 2; j++) {
                     IBAN[j + 20] = Integer.toString(num).charAt(j);
@@ -455,7 +493,7 @@ public class Practicasistemas {
         }
 
         for (int i = 0; i < abcd.length(); i++) {
-            if(secondIbanLetter == abcd.charAt(i)){
+            if (secondIbanLetter == abcd.charAt(i)) {
                 int num = abcdNum[i];
                 for (int j = 0; j < 2; j++) {
                     IBAN[j + 22] = Integer.toString(num).charAt(j);
@@ -477,202 +515,204 @@ public class Practicasistemas {
         for (int i = 0; i < Integer.toString(diff).length(); i++) {
             conv[i] = Integer.toString(diff).charAt(i);
         }
-        if(conv[1] == '\u0000'){
+        if (conv[1] == '\u0000') {
             conv[1] = conv[0];
             conv[0] = '0';
         }
 
         //Comprobamos si los dígitos de control obtenidos son válidos.
         StringBuilder correctedIBAN = new StringBuilder();
-        for(int i = 0; i < 24; i++){
-            if(i == 0){
+        for (int i = 0; i < 24; i++) {
+            if (i == 0) {
                 correctedIBAN.append(contribuyente.getPaisCcc().charAt(i));
-            }else if(i == 1){
+            } else if (i == 1) {
                 correctedIBAN.append(contribuyente.getPaisCcc().charAt(i));
-            }else if(i == 2) {
+            } else if (i == 2) {
                 correctedIBAN.append(conv[0]);
-            }else if(i == 3){
+            } else if (i == 3) {
                 correctedIBAN.append(conv[1]);
-            }else{
+            } else {
                 correctedIBAN.append(CorrectedCCC[i - 4]);
             }
         }
         contribuyente.setIban(correctedIBAN.toString());
-        if(check){crearXMLccc(contribuyente, documentCcc, cuentasElem);}
+        if (check) {
+            crearXMLccc(contribuyente, documentCcc, cuentasElem);
+        }
         contribuyente.setCcc(CorrectedCCCStd);
         ExcelManager.setNewCCCIBAN("./resources/SistemasAgua.xlsx", contribuyente);
-        
+
         //System.out.println(Arrays.toString(nrbeOfficeCheck) + "\n" + Arrays.toString(idCheck) + "\n" + firstDigit + "\n" + secondDigit + "\n" + Arrays.toString(CorrectedCCC) + "\n" + correctedIBAN);
-    
+
     }
-    public static void generarRecibo(Contribuyente contribuyente, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem){
-        if(fechaFinTr.after(contribuyente.getFechaAlta()) && (contribuyente.getFechaBaja() == null || contribuyente.getFechaBaja().after(fechaFinTr))){
-        System.out.println(contribuyente.getNombre());
-        List<String> lecturas = new ArrayList<>(contribuyente.getLecturases());
-        if(lecturas.size() == 1){
-            lecturas.add(lecturas.get(0));
-        }
-        double diferenciaLecturas = Math.abs(Double.parseDouble(lecturas.get(1)) - Double.parseDouble(lecturas.get(0)));
+    public static void generarRecibo(Contribuyente contribuyente, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem) {
+        if (fechaFinTr.after(contribuyente.getFechaAlta()) && (contribuyente.getFechaBaja() == null || contribuyente.getFechaBaja().after(fechaFinTr))) {
+            System.out.println(contribuyente.getNombre());
+            List < String > lecturas = new ArrayList < > (contribuyente.getLecturases());
+            if (lecturas.size() == 1) {
+                lecturas.add(lecturas.get(0));
+            }
+            double diferenciaLecturas = Math.abs(Double.parseDouble(lecturas.get(1)) - Double.parseDouble(lecturas.get(0)));
 
-        List<String> conceptosCobrar = new ArrayList<>(contribuyente.getRelContribuyenteOrdenanzas());
+            List < String > conceptosCobrar = new ArrayList < > (contribuyente.getRelContribuyenteOrdenanzas());
 
-        Map<String, Double> listaConceptos = new LinkedHashMap<>();
-        double costeTotal = 0;
-        List<Integer> diferidos = new ArrayList<>();
-        double ivaTotal = 0;
+            Map < String, Double > listaConceptos = new LinkedHashMap < > ();
+            double costeTotal = 0;
+            List < Integer > diferidos = new ArrayList < > ();
+            double ivaTotal = 0;
 
-        for(int i = 0; i < conceptosCobrar.size(); i++){
-            int metrosAcumulados = 0;
-            double costeConcepto = 0;
-            double costeConceptoSinD = 0;
+            for (int i = 0; i < conceptosCobrar.size(); i++) {
+                int metrosAcumulados = 0;
+                double costeConcepto = 0;
+                double costeConceptoSinD = 0;
 
-            int conceptoId = Integer.parseInt(conceptosCobrar.get(i));
-            for(int j = 2; j < ordenanzas.size() + 2; j++){
-                double costeTramo = 0;
-                //System.out.println("Concepto: " + Integer.parseInt(conceptosCobrar.get(i)) + " Ordenanza" + ordenanzas.get(j).getIdOrdenanza());
-                if(Integer.parseInt(conceptosCobrar.get(i)) == ordenanzas.get(j).getIdOrdenanza()){
-                    //System.out.println(ordenanzas.get(j).getAcumulable() + "\n" + ordenanzas.get(j).getPrecioFijo() + "\n" + conceptosCobrar.get(i).toString());
-                    if(ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getM3incluidos() != null){
-                        costeTramo += ordenanzas.get(j).getPrecioFijo();
-                        if(ordenanzas.get(j).getAcumulable() != null){
-                        if(ordenanzas.get(j).getAcumulable().equals("S")){
-                            metrosAcumulados += ordenanzas.get(j).getM3incluidos();
-                            if(metrosAcumulados > diferenciaLecturas){
-                                diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
+                int conceptoId = Integer.parseInt(conceptosCobrar.get(i));
+                for (int j = 2; j < ordenanzas.size() + 2; j++) {
+                    double costeTramo = 0;
+                    //System.out.println("Concepto: " + Integer.parseInt(conceptosCobrar.get(i)) + " Ordenanza" + ordenanzas.get(j).getIdOrdenanza());
+                    if (Integer.parseInt(conceptosCobrar.get(i)) == ordenanzas.get(j).getIdOrdenanza()) {
+                        //System.out.println(ordenanzas.get(j).getAcumulable() + "\n" + ordenanzas.get(j).getPrecioFijo() + "\n" + conceptosCobrar.get(i).toString());
+                        if (ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getM3incluidos() != null) {
+                            costeTramo += ordenanzas.get(j).getPrecioFijo();
+                            if (ordenanzas.get(j).getAcumulable() != null) {
+                                if (ordenanzas.get(j).getAcumulable().equals("S")) {
+                                    metrosAcumulados += ordenanzas.get(j).getM3incluidos();
+                                    if (metrosAcumulados > diferenciaLecturas) {
+                                        diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
+                                    }
+                                } else {
+                                    diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
+                                }
                             }
-                        }else{
-                            diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
+                            if (diferenciaLecturas < 0) {
+                                diferenciaLecturas = 0;
+                            }
                         }
-                        }
-                        if(diferenciaLecturas < 0){
-                            diferenciaLecturas = 0;
-                        }
-                    }
-                    
-                    if(ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getM3incluidos() == null && ordenanzas.get(j).getPorcentaje() == null){
-                        costeTramo += ordenanzas.get(j).getPrecioFijo();
-                    }
-                    //System.out.println("Concepto: " + ordenanzas.get(j).getSubconcepto() + " " + ordenanzas.get(j).getM3incluidos() + " " + ordenanzas.get(j).getPorcentaje());
-                    if(ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getPrecioFijo() == null && ordenanzas.get(j).getPorcentaje() != null){
-                        //Si el conceptoCobrar es mayor que el idOrdenanza que tenemos, añadir al final de la lista la ordenanza
-                        //para que la cobre cuando ya haya calculado el concepto siguiente
-                        if(Integer.parseInt(conceptosCobrar.get(i)) < ordenanzas.get(j).getConceptoRelacionado()){
-                            diferidos.add(conceptoId);
-                            break;
-                        }else{
-                            double baseOtroConcepto = listaConceptos.get(ordenanzas.get(j).getConceptoRelacionado().toString());
-                            baseOtroConcepto = baseOtroConcepto * ordenanzas.get(j).getPorcentaje() / 100;
-                            costeTramo += baseOtroConcepto;
-                            
-                        }
-                        
-                    }
-                    
-                    if(ordenanzas.get(j).getSubconcepto().contains("Desagüe")){
-                        if(Integer.parseInt(conceptosCobrar.get(i)) < ordenanzas.get(j).getConceptoRelacionado()){
-                            diferidos.add(conceptoId);
-                            break;
-                        }else{
-                            double baseOtroConcepto = listaConceptos.get(ordenanzas.get(j).getConceptoRelacionado().toString());
-                            baseOtroConcepto = baseOtroConcepto * ordenanzas.get(j).getPorcentaje() / 100;
-                            costeTramo += baseOtroConcepto;
-                        }
-                    }
 
-                    if(ordenanzas.get(j).getSubconcepto().contains("tramo") && ordenanzas.get(j).getAcumulable().equals("N")){
-                        int metrosUsados = 0;
-                        while(diferenciaLecturas > 0 && metrosUsados != ordenanzas.get(j).getM3incluidos()){
-                            costeTramo = costeTramo + ordenanzas.get(j).getPreciom3() * 1;
-                            metrosUsados++;
-                            diferenciaLecturas--;
+                        if (ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getM3incluidos() == null && ordenanzas.get(j).getPorcentaje() == null) {
+                            costeTramo += ordenanzas.get(j).getPrecioFijo();
                         }
-                    }
-                    
-                    if(ordenanzas.get(j).getSubconcepto().contains("tramo") && ordenanzas.get(j).getAcumulable().equals("S")){
-                        int metrosUsados = 0;     
-                        metrosAcumulados += ordenanzas.get(j).getM3incluidos();
-                        if(diferenciaLecturas < metrosAcumulados){
-                            while(diferenciaLecturas > 0 && metrosUsados != metrosAcumulados){
-                                costeTramo += ordenanzas.get(j).getPreciom3() * 1;
+                        //System.out.println("Concepto: " + ordenanzas.get(j).getSubconcepto() + " " + ordenanzas.get(j).getM3incluidos() + " " + ordenanzas.get(j).getPorcentaje());
+                        if (ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getPrecioFijo() == null && ordenanzas.get(j).getPorcentaje() != null) {
+                            //Si el conceptoCobrar es mayor que el idOrdenanza que tenemos, añadir al final de la lista la ordenanza
+                            //para que la cobre cuando ya haya calculado el concepto siguiente
+                            if (Integer.parseInt(conceptosCobrar.get(i)) < ordenanzas.get(j).getConceptoRelacionado()) {
+                                diferidos.add(conceptoId);
+                                break;
+                            } else {
+                                double baseOtroConcepto = listaConceptos.get(ordenanzas.get(j).getConceptoRelacionado().toString());
+                                baseOtroConcepto = baseOtroConcepto * ordenanzas.get(j).getPorcentaje() / 100;
+                                costeTramo += baseOtroConcepto;
+
+                            }
+
+                        }
+
+                        if (ordenanzas.get(j).getSubconcepto().contains("Desagüe")) {
+                            if (Integer.parseInt(conceptosCobrar.get(i)) < ordenanzas.get(j).getConceptoRelacionado()) {
+                                diferidos.add(conceptoId);
+                                break;
+                            } else {
+                                double baseOtroConcepto = listaConceptos.get(ordenanzas.get(j).getConceptoRelacionado().toString());
+                                baseOtroConcepto = baseOtroConcepto * ordenanzas.get(j).getPorcentaje() / 100;
+                                costeTramo += baseOtroConcepto;
+                            }
+                        }
+
+                        if (ordenanzas.get(j).getSubconcepto().contains("tramo") && ordenanzas.get(j).getAcumulable().equals("N")) {
+                            int metrosUsados = 0;
+                            while (diferenciaLecturas > 0 && metrosUsados != ordenanzas.get(j).getM3incluidos()) {
+                                costeTramo = costeTramo + ordenanzas.get(j).getPreciom3() * 1;
                                 metrosUsados++;
                                 diferenciaLecturas--;
                             }
                         }
-                    }
-                    if(ordenanzas.get(j).getM3incluidos() != null && ordenanzas.get(j).getPrecioFijo() != null && ordenanzas.get(j).getPreciom3() != null){
-                        costeTramo += ordenanzas.get(j).getPrecioFijo();
-                        if(diferenciaLecturas > ordenanzas.get(j).getM3incluidos()){
-                            while(diferenciaLecturas > 0){
-                                costeTramo += ordenanzas.get(j).getPreciom3() * 1;
-                                diferenciaLecturas--;
-                            }
-                        }else{
-                            diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
-                            if(diferenciaLecturas < 0){
-                                diferenciaLecturas = 0;
-                            }
-                        } 
-                    }
-                    costeConceptoSinD += costeTramo;
-                    if(contribuyente.getBonificacion() != 0){
-                        double bonificacion = costeTramo * contribuyente.getBonificacion() / 100;
-                        costeTramo = costeTramo - bonificacion;
-                    }
-                    double ivaTramo = costeTramo * ordenanzas.get(j).getIva() / 100;
-                    ivaTotal += ivaTramo;
-                    costeConcepto += costeTramo;
-                    System.out.println(df.format(costeTramo) + " iva tramo: " + ivaTramo);
-                }
-            }
-            if(!diferidos.contains(conceptoId)){
-                costeTotal += costeConcepto;
-                listaConceptos.put(conceptosCobrar.get(i), costeConceptoSinD);
-                //System.out.println(df.format(costeConcepto));
-            }
-        }
 
-        for(int diferido : diferidos){
-            double costeConcepto = 0;
-            double costeTramo = 0;
-            double ivaTramo = 0;
-            double costeConceptoSinD = 0;
-            //System.out.println(diferido);
-            for(int j = 2; j < ordenanzas.size() + 2; j++){
-                if (diferido == ordenanzas.get(j).getIdOrdenanza()){
-                    double baseOtroConcepto = listaConceptos.get(ordenanzas.get(j).getConceptoRelacionado().toString());
-                    baseOtroConcepto = baseOtroConcepto * ordenanzas.get(j).getPorcentaje() / 100;
-                    costeTramo += baseOtroConcepto;
-                    costeConceptoSinD += costeTramo;
-                    if(contribuyente.getBonificacion() != 0){
-                    double bonificacion = costeTramo * contribuyente.getBonificacion() / 100;
-                    costeTramo = costeTramo - bonificacion;
+                        if (ordenanzas.get(j).getSubconcepto().contains("tramo") && ordenanzas.get(j).getAcumulable().equals("S")) {
+                            int metrosUsados = 0;
+                            metrosAcumulados += ordenanzas.get(j).getM3incluidos();
+                            if (diferenciaLecturas < metrosAcumulados) {
+                                while (diferenciaLecturas > 0 && metrosUsados != metrosAcumulados) {
+                                    costeTramo += ordenanzas.get(j).getPreciom3() * 1;
+                                    metrosUsados++;
+                                    diferenciaLecturas--;
+                                }
+                            }
+                        }
+                        if (ordenanzas.get(j).getM3incluidos() != null && ordenanzas.get(j).getPrecioFijo() != null && ordenanzas.get(j).getPreciom3() != null) {
+                            costeTramo += ordenanzas.get(j).getPrecioFijo();
+                            if (diferenciaLecturas > ordenanzas.get(j).getM3incluidos()) {
+                                while (diferenciaLecturas > 0) {
+                                    costeTramo += ordenanzas.get(j).getPreciom3() * 1;
+                                    diferenciaLecturas--;
+                                }
+                            } else {
+                                diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
+                                if (diferenciaLecturas < 0) {
+                                    diferenciaLecturas = 0;
+                                }
+                            }
+                        }
+                        costeConceptoSinD += costeTramo;
+                        if (contribuyente.getBonificacion() != 0) {
+                            double bonificacion = costeTramo * contribuyente.getBonificacion() / 100;
+                            costeTramo = costeTramo - bonificacion;
+                        }
+                        double ivaTramo = costeTramo * ordenanzas.get(j).getIva() / 100;
+                        ivaTotal += ivaTramo;
+                        costeConcepto += costeTramo;
+                        System.out.println(df.format(costeTramo) + " iva tramo: " + ivaTramo);
                     }
-                    ivaTramo = costeTramo * ordenanzas.get(j).getIva() / 100;
-                    costeConcepto += costeTramo;
                 }
-                
+                if (!diferidos.contains(conceptoId)) {
+                    costeTotal += costeConcepto;
+                    listaConceptos.put(conceptosCobrar.get(i), costeConceptoSinD);
+                    //System.out.println(df.format(costeConcepto));
+                }
             }
+
+            for (int diferido: diferidos) {
+                double costeConcepto = 0;
+                double costeTramo = 0;
+                double ivaTramo = 0;
+                double costeConceptoSinD = 0;
+                //System.out.println(diferido);
+                for (int j = 2; j < ordenanzas.size() + 2; j++) {
+                    if (diferido == ordenanzas.get(j).getIdOrdenanza()) {
+                        double baseOtroConcepto = listaConceptos.get(ordenanzas.get(j).getConceptoRelacionado().toString());
+                        baseOtroConcepto = baseOtroConcepto * ordenanzas.get(j).getPorcentaje() / 100;
+                        costeTramo += baseOtroConcepto;
+                        costeConceptoSinD += costeTramo;
+                        if (contribuyente.getBonificacion() != 0) {
+                            double bonificacion = costeTramo * contribuyente.getBonificacion() / 100;
+                            costeTramo = costeTramo - bonificacion;
+                        }
+                        ivaTramo = costeTramo * ordenanzas.get(j).getIva() / 100;
+                        costeConcepto += costeTramo;
+                    }
+
+                }
                 ivaTotal += ivaTramo;
                 System.out.println(df.format(costeConcepto) + " iva tramo: " + ivaTramo);
                 costeTotal += costeTramo;
                 listaConceptos.put(String.valueOf(diferido), costeConceptoSinD);
-            
+
+            }
+            contribuyente.setBaseImponible(costeTotal);
+            totalBaseImponible += costeTotal;
+            contribuyente.setIvaRecibo(ivaTotal);
+            totalIva += ivaTotal;
+            System.out.println(contribuyente.getNombre() + " sin iva: " + costeTotal + " iva: " + ivaTotal);
+            costeTotal += ivaTotal;
+            if (contribuyente.getExencion().equals('S')) {
+                costeTotal = 0;
+            }
+            System.out.println(contribuyente.getNombre() + ": " + costeTotal);
+            crearXMLRecibos(contribuyente, documentRecib, recibosElem);
         }
-        contribuyente.setBaseImponible(costeTotal);
-        totalBaseImponible += costeTotal;
-        contribuyente.setIvaRecibo(ivaTotal);
-        totalIva += ivaTotal;
-        System.out.println(contribuyente.getNombre() + " sin iva: " + costeTotal + " iva: " + ivaTotal);
-        costeTotal += ivaTotal;
-        if(contribuyente.getExencion().equals('S')){
-            costeTotal = 0;
-        }
-        System.out.println(contribuyente.getNombre() + ": " + costeTotal);
-        crearXMLRecibos(contribuyente, documentRecib, recibosElem);
-        }
-    
+
     }
-    public static void crearXMLRecibos(Contribuyente contribuyente, Document documentRecib, Element recibosElem){
+    public static void crearXMLRecibos(Contribuyente contribuyente, Document documentRecib, Element recibosElem) {
         contador++;
         Element reciboElem = documentRecib.createElement("Recibo");
         reciboElem.setAttribute("idRecibo", Integer.toString(contador));
@@ -760,11 +800,11 @@ public class Practicasistemas {
             reciboElem.appendChild(iban);
         }
 
-        List<String> lecturas = new ArrayList<>(contribuyente.getLecturases());
-        if(lecturas.size() == 1){
+        List < String > lecturas = new ArrayList < > (contribuyente.getLecturases());
+        if (lecturas.size() == 1) {
             lecturas.add(lecturas.get(0));
         }
-        if(Double.parseDouble(lecturas.get(1)) < Double.parseDouble(lecturas.get(0))){
+        if (Double.parseDouble(lecturas.get(1)) < Double.parseDouble(lecturas.get(0))) {
             String aux = lecturas.get(0);
             lecturas.set(0, lecturas.get(1));
             lecturas.set(1, aux);
@@ -805,7 +845,7 @@ public class Practicasistemas {
             consumo.appendChild(consumoT);
             reciboElem.appendChild(consumo);
         }
-        
+
         if (contribuyente.getBaseImponible() != null) {
             Element base = documentRecib.createElement("baseImponibleRecibo");
             Text baseT = documentRecib.createTextNode(df.format(contribuyente.getBaseImponible()));
@@ -844,7 +884,7 @@ public class Practicasistemas {
         }
         recibosElem.appendChild(reciboElem);
     }
-    
+
     private static Date getLastDayOfTrimestre(int year, int month) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
