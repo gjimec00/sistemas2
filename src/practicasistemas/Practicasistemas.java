@@ -46,6 +46,7 @@ public class Practicasistemas {
     public static int contador = 0;
     public static double totalBaseImponible = 0;
     public static double totalIva = 0;
+    public static DecimalFormat df = new DecimalFormat("0.000");
     public static void main(String[] args) {
         Map < Integer, Contribuyente > contribuyentes = new LinkedHashMap < > ();
         Map < Integer, Ordenanza > ordenanzas = new LinkedHashMap < > ();
@@ -56,9 +57,11 @@ public class Practicasistemas {
         int year = Integer.parseInt(input.substring(3));
         Date fechaFinTr;
         if(trimestre.equals("1T")){
-            fechaFinTr = getLastDayOfTrimestre(year, Calendar.APRIL);
+            fechaFinTr = getLastDayOfTrimestre(year, Calendar.MARCH);
         }else if(trimestre.equals("2T")){
-            fechaFinTr = getLastDayOfTrimestre(year, Calendar.AUGUST);
+            fechaFinTr = getLastDayOfTrimestre(year, Calendar.JUNE);
+        }else if(trimestre.equals("3T")){
+            fechaFinTr = getLastDayOfTrimestre(year, Calendar.SEPTEMBER);
         }else{
             fechaFinTr = getLastDayOfTrimestre(year, Calendar.DECEMBER);
         }
@@ -124,10 +127,10 @@ public class Practicasistemas {
             transformerCcc.setOutputProperty(OutputKeys.INDENT, "yes");
             transformerCcc.transform(sourceCcc, resultCcc);
             //Recibos XML
-            recibosElem.setAttribute("totalBaseImponible", Double.toString(totalBaseImponible));
-            recibosElem.setAttribute("totalIva", Double.toString(totalIva));
+            recibosElem.setAttribute("totalBaseImponible", df.format(totalBaseImponible));
+            recibosElem.setAttribute("totalIva", df.format(totalIva));
             double totalRecibos = totalBaseImponible + totalIva;
-            recibosElem.setAttribute("totalRecibos", Double.toString(totalRecibos));
+            recibosElem.setAttribute("totalRecibos", df.format(totalRecibos));
             if (documentRecib.getDocumentElement() == null) {
                 documentRecib.appendChild(recibosElem);
             }
@@ -197,7 +200,6 @@ public class Practicasistemas {
 
         if (dniNieLetter == check) {
             System.out.println("DNI correcto.");
-            generarRecibo(contribuyente, ordenanzas, fechaFinTr, documentRecib, recibosElem);
         } else {
             System.out.println("DNI incorrecto, Error subsanable.");
             String dniCorregido = dniNie + check;
@@ -206,6 +208,7 @@ public class Practicasistemas {
         }
         if (!listanifnies.containsValue(contribuyente.getNifnie())) {
             listanifnies.put(contribuyente.getIdContribuyente(), contribuyente.getNifnie());
+            generarRecibo(contribuyente, ordenanzas, fechaFinTr, documentRecib, recibosElem);
         } else {
             crearXMLNifnie(contribuyente, document, contribuyentesElem);
         }
@@ -504,7 +507,6 @@ public class Practicasistemas {
     }
     public static void generarRecibo(Contribuyente contribuyente, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem){
         if(fechaFinTr.after(contribuyente.getFechaAlta()) && (contribuyente.getFechaBaja() == null || contribuyente.getFechaBaja().after(fechaFinTr))){
-        DecimalFormat df = new DecimalFormat("0.000");
         System.out.println(contribuyente.getNombre());
         List<String> lecturas = new ArrayList<>(contribuyente.getLecturases());
         if(lecturas.size() == 1){
@@ -806,7 +808,7 @@ public class Practicasistemas {
         
         if (contribuyente.getBaseImponible() != null) {
             Element base = documentRecib.createElement("baseImponibleRecibo");
-            Text baseT = documentRecib.createTextNode(contribuyente.getBaseImponible().toString());
+            Text baseT = documentRecib.createTextNode(df.format(contribuyente.getBaseImponible()));
             base.appendChild(baseT);
             reciboElem.appendChild(base);
         } else {
@@ -818,7 +820,7 @@ public class Practicasistemas {
 
         if (contribuyente.getIvaRecibo() != null) {
             Element iva = documentRecib.createElement("ivaRecibo");
-            Text ivaT = documentRecib.createTextNode(contribuyente.getIvaRecibo().toString());
+            Text ivaT = documentRecib.createTextNode(df.format(contribuyente.getIvaRecibo()));
             iva.appendChild(ivaT);
             reciboElem.appendChild(iva);
         } else {
@@ -831,7 +833,7 @@ public class Practicasistemas {
         if (contribuyente.getIvaRecibo() != null && contribuyente.getBaseImponible() != null) {
             Element total = documentRecib.createElement("totalRecibo");
             Double totalD = contribuyente.getBaseImponible() + contribuyente.getIvaRecibo();
-            Text totalT = documentRecib.createTextNode(totalD.toString());
+            Text totalT = documentRecib.createTextNode(df.format(totalD));
             total.appendChild(totalT);
             reciboElem.appendChild(total);
         } else {
