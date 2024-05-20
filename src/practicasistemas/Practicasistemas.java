@@ -33,6 +33,21 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
+import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.borders.SolidBorder;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.layout.properties.UnitValue;
 
 /**
  *
@@ -710,8 +725,96 @@ public class Practicasistemas {
             System.out.println(contribuyente.getNombre() + ": " + costeTotal);
             crearXMLRecibos(contribuyente, documentRecib, recibosElem);
         }
-
     }
+    
+    
+    
+    public static void crearPdf(){
+        PdfWriter writer = new PdfWriter("resources/recibos/resumen.pdf");
+        PdfDocument pdfDoc = new PdfDocument(writer);
+        Document doc = new Document(pdfDoc, PageSize.LETTER);
+        public final static String imagen = "resources/imgEmpresa.jpg"
+        
+        // Add title
+        document.add(new Paragraph("Recibo de Agua")
+                .setTextAlignment(TextAlignment.CENTER)
+                .setFontSize(20)
+                .setBold());
+        
+        // Add company details
+        document.add(new Paragraph("Astorga")
+                .setTextAlignment(TextAlignment.RIGHT));
+        document.add(new Paragraph("P24001017F")
+                .setTextAlignment(TextAlignment.RIGHT));
+        document.add(new Paragraph("Calle de la Iglesia, 13")
+                .setTextAlignment(TextAlignment.RIGHT));
+        document.add(new Paragraph("24280 Astorga León")
+                .setTextAlignment(TextAlignment.RIGHT));
+        document.add(new Paragraph("IBAN: GR9420125003305201112544")
+                .setTextAlignment(TextAlignment.RIGHT));
+        
+        // Add invoice details
+        document.add(new Paragraph("Tipo de cálculo: Hogar"));
+        document.add(new Paragraph("Fecha de alta: 22/03/2020"));
+        
+        // Add recipient details
+        document.add(new Paragraph("Destinatario:"));
+        document.add(new Paragraph("Vittorio Diez Otero"));
+        document.add(new Paragraph("DNI: 00538394X"));
+        document.add(new Paragraph("IGLESIA (LA)0003"));
+        document.add(new Paragraph("Astorga"));
+        
+        // Add meter readings
+        document.add(new Paragraph("Lectura actual: 637 Lectura anterior: 586 Consumo: 51 metros cúbicos."));
+        
+        // Add invoice period
+        document.add(new Paragraph("Recibo agua: Primer trimestre de 2023"));
+        
+        // Create a table
+        float[] columnWidths = {3, 3, 3, 3, 3, 3};
+        Table table = new Table(UnitValue.createPercentArray(columnWidths));
+        table.setWidth(UnitValue.createPercentValue(100));
+        
+        // Add table headers
+        table.addHeaderCell(new Cell().add(new Paragraph("Concepto")).setBackgroundColor(new DeviceRgb(224, 224, 224)));
+        table.addHeaderCell(new Cell().add(new Paragraph("Subconcepto")).setBackgroundColor(new DeviceRgb(224, 224, 224)));
+        table.addHeaderCell(new Cell().add(new Paragraph("M3 incluídos")).setBackgroundColor(new DeviceRgb(224, 224, 224)));
+        table.addHeaderCell(new Cell().add(new Paragraph("B.Imponible")).setBackgroundColor(new DeviceRgb(224, 224, 224)));
+        table.addHeaderCell(new Cell().add(new Paragraph("IVA %")).setBackgroundColor(new DeviceRgb(224, 224, 224)));
+        table.addHeaderCell(new Cell().add(new Paragraph("Importe")).setBackgroundColor(new DeviceRgb(224, 224, 224)));
+        
+        // Add table data
+        String[][] data = {
+                {"Agua", "Fijo", "30,00", "15,00", "21,00%", "03,15"},
+                {"Agua", "Primer tramo", "20,00", "03,00", "21,00%", "00,63"},
+                {"Agua", "Segundo tramo", "01,00", "00,22", "21,00%", "00,05"},
+                {"Agua", "Tercer tramo", "00,00", "00,00", "21,00%", "00,00"},
+                {"Agua", "Cuarto tramo", "00,00", "00,00", "21,00%", "00,00"},
+                {"Desagüe", "Desagüe", "00,00", "01,82", "00,00%", "00,00"},
+                {"Alcantarillado", "Fijo", "00,00", "00,18", "10,00%", "00,02"}
+        };
+        
+        for (String[] row : data) {
+            for (String cell : row) {
+                table.addCell(new Cell().add(new Paragraph(cell)));
+            }
+        }
+        
+        // Add totals row
+        table.addCell(new Cell(1, 5).add(new Paragraph("TOTALES")));
+        table.addCell(new Cell().add(new Paragraph("20,23")));
+        table.addCell(new Cell().add(new Paragraph("03,85")));
+        
+        document.add(table);
+        
+        // Add final totals
+        document.add(new Paragraph("TOTAL BASE IMPONIBLE...................................... 20,23"));
+        document.add(new Paragraph("TOTAL IVA.............................................................. 03,85"));
+        document.add(new Paragraph("TOTAL RECIBO........................................................... 24,08"));
+        
+        document.close();
+    }
+
     public static void crearXMLRecibos(Contribuyente contribuyente, Document documentRecib, Element recibosElem) {
         contador++;
         Element reciboElem = documentRecib.createElement("Recibo");
