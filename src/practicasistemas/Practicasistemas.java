@@ -33,22 +33,7 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
-import com.itextpdf.io.font.constants.StandardFonts;
-import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.font.PdfFontFactory;
-import com.itextpdf.kernel.geom.PageSize;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.borders.Border;
-import com.itextpdf.layout.borders.SolidBorder;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Image;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.properties.TextAlignment;
-import com.itextpdf.layout.properties.UnitValue;
-
+import java.io.IOException;
 /**
  *
  * @author Guille & Ovi 😎
@@ -62,12 +47,13 @@ public class Practicasistemas {
     public static double totalBaseImponible = 0;
     public static double totalIva = 0;
     public static DecimalFormat df = new DecimalFormat("0.000");
-    public static void main(String[] args) {
+    public static String input;
+    public static void main(String[] args) throws IOException {
         Map < Integer, Contribuyente > contribuyentes = new LinkedHashMap < > ();
         Map < Integer, Ordenanza > ordenanzas = new LinkedHashMap < > ();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Introduce el trimestre y año del que se desean generar recibos: ");
-        String input = scanner.nextLine();
+        input = scanner.nextLine();
         String trimestre = input.substring(0, 2);
         int year = Integer.parseInt(input.substring(3));
         Date fechaFinTr;
@@ -158,7 +144,7 @@ public class Practicasistemas {
             System.out.println(e);
         }
     }
-    public static void comprobarDNI(String nifnie, Contribuyente contribuyente, Document document, Element contribuyentesElem, Map listanifnies, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem) {
+    public static void comprobarDNI(String nifnie, Contribuyente contribuyente, Document document, Element contribuyentesElem, Map listanifnies, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem) throws IOException{
         String letter = "TRWAGMYFPDXBNJZSQVHLCKE";
         String dniNieRaw = nifnie;
 
@@ -560,10 +546,12 @@ public class Practicasistemas {
         //System.out.println(Arrays.toString(nrbeOfficeCheck) + "\n" + Arrays.toString(idCheck) + "\n" + firstDigit + "\n" + secondDigit + "\n" + Arrays.toString(CorrectedCCC) + "\n" + correctedIBAN);
 
     }
-    public static void generarRecibo(Contribuyente contribuyente, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem) {
+    public static void generarRecibo(Contribuyente contribuyente, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem) throws IOException{
         if (fechaFinTr.after(contribuyente.getFechaAlta()) && (contribuyente.getFechaBaja() == null || contribuyente.getFechaBaja().after(fechaFinTr))) {
             System.out.println(contribuyente.getNombre());
+            ArrayList<ArrayList<String>> datosRecibo = new ArrayList<>();
             List < String > lecturas = new ArrayList < > (contribuyente.getLecturases());
+            String tipoCalculo = "";
             if (lecturas.size() == 1) {
                 lecturas.add(lecturas.get(0));
             }
@@ -586,6 +574,14 @@ public class Practicasistemas {
                     double costeTramo = 0;
                     //System.out.println("Concepto: " + Integer.parseInt(conceptosCobrar.get(i)) + " Ordenanza" + ordenanzas.get(j).getIdOrdenanza());
                     if (Integer.parseInt(conceptosCobrar.get(i)) == ordenanzas.get(j).getIdOrdenanza()) {
+                        /*StringBuilder sb = new StringBuilder();
+                        sb.append("fila").append()*/
+                        ArrayList<String> fila = new ArrayList<>();
+                        fila.add(ordenanzas.get(j).getConcepto());
+                        fila.add(ordenanzas.get(j).getSubconcepto());
+                        fila.add(df.format(diferenciaLecturas));
+                        tipoCalculo = ordenanzas.get(j).getTipoCalculo();
+                        
                         //System.out.println(ordenanzas.get(j).getAcumulable() + "\n" + ordenanzas.get(j).getPrecioFijo() + "\n" + conceptosCobrar.get(i).toString());
                         if (ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getM3incluidos() != null) {
                             costeTramo += ordenanzas.get(j).getPrecioFijo();
@@ -673,11 +669,19 @@ public class Practicasistemas {
                             double bonificacion = costeTramo * contribuyente.getBonificacion() / 100;
                             costeTramo = costeTramo - bonificacion;
                         }
+                        fila.add(df.format(costeTramo));
+                        fila.add(df.format(ordenanzas.get(j).getIva()));
                         double ivaTramo = costeTramo * ordenanzas.get(j).getIva() / 100;
+                        fila.add(df.format(ivaTramo));
+                        if (contribuyente.getBonificacion() != 0) {
+                            fila.add(df.format(contribuyente.getBonificacion()));
+                        }
                         ivaTotal += ivaTramo;
                         costeConcepto += costeTramo;
                         System.out.println(df.format(costeTramo) + " iva tramo: " + ivaTramo);
+                        datosRecibo.add(fila);
                     }
+
                 }
                 if (!diferidos.contains(conceptoId)) {
                     costeTotal += costeConcepto;
@@ -694,6 +698,10 @@ public class Practicasistemas {
                 //System.out.println(diferido);
                 for (int j = 2; j < ordenanzas.size() + 2; j++) {
                     if (diferido == ordenanzas.get(j).getIdOrdenanza()) {
+                        ArrayList<String> fila = new ArrayList<>();
+                        fila.add(ordenanzas.get(j).getConcepto());
+                        fila.add(ordenanzas.get(j).getSubconcepto());
+                        fila.add(df.format(diferenciaLecturas));
                         double baseOtroConcepto = listaConceptos.get(ordenanzas.get(j).getConceptoRelacionado().toString());
                         baseOtroConcepto = baseOtroConcepto * ordenanzas.get(j).getPorcentaje() / 100;
                         costeTramo += baseOtroConcepto;
@@ -702,8 +710,15 @@ public class Practicasistemas {
                             double bonificacion = costeTramo * contribuyente.getBonificacion() / 100;
                             costeTramo = costeTramo - bonificacion;
                         }
+                        fila.add(df.format(costeTramo));
+                        fila.add(df.format(ordenanzas.get(j).getIva()));
                         ivaTramo = costeTramo * ordenanzas.get(j).getIva() / 100;
+                        fila.add(df.format(ivaTramo));
+                        if (contribuyente.getBonificacion() != 0) {
+                            fila.add(df.format(contribuyente.getBonificacion()));
+                        }
                         costeConcepto += costeTramo;
+                        datosRecibo.add(fila);
                     }
 
                 }
@@ -713,108 +728,24 @@ public class Practicasistemas {
                 listaConceptos.put(String.valueOf(diferido), costeConceptoSinD);
 
             }
+
+            System.out.println(contribuyente.getNombre() + " sin iva: " + costeTotal + " iva: " + ivaTotal);
+            if (contribuyente.getExencion().equals('S')) {
+                costeTotal = 0;
+                ivaTotal = 0;
+            }
             contribuyente.setBaseImponible(costeTotal);
             totalBaseImponible += costeTotal;
             contribuyente.setIvaRecibo(ivaTotal);
             totalIva += ivaTotal;
-            System.out.println(contribuyente.getNombre() + " sin iva: " + costeTotal + " iva: " + ivaTotal);
             costeTotal += ivaTotal;
-            if (contribuyente.getExencion().equals('S')) {
-                costeTotal = 0;
-            }
             System.out.println(contribuyente.getNombre() + ": " + costeTotal);
             crearXMLRecibos(contribuyente, documentRecib, recibosElem);
+            GeneratePDF.generarPDFs(contribuyente, datosRecibo, costeTotal, ivaTotal, tipoCalculo, input);
+            
         }
     }
     
-    
-    
-    public static void crearPdf(){
-        PdfWriter writer = new PdfWriter("resources/recibos/resumen.pdf");
-        PdfDocument pdfDoc = new PdfDocument(writer);
-        Document doc = new Document(pdfDoc, PageSize.LETTER);
-        public final static String imagen = "resources/imgEmpresa.jpg"
-        
-        // Add title
-        document.add(new Paragraph("Recibo de Agua")
-                .setTextAlignment(TextAlignment.CENTER)
-                .setFontSize(20)
-                .setBold());
-        
-        // Add company details
-        document.add(new Paragraph("Astorga")
-                .setTextAlignment(TextAlignment.RIGHT));
-        document.add(new Paragraph("P24001017F")
-                .setTextAlignment(TextAlignment.RIGHT));
-        document.add(new Paragraph("Calle de la Iglesia, 13")
-                .setTextAlignment(TextAlignment.RIGHT));
-        document.add(new Paragraph("24280 Astorga León")
-                .setTextAlignment(TextAlignment.RIGHT));
-        document.add(new Paragraph("IBAN: GR9420125003305201112544")
-                .setTextAlignment(TextAlignment.RIGHT));
-        
-        // Add invoice details
-        document.add(new Paragraph("Tipo de cálculo: Hogar"));
-        document.add(new Paragraph("Fecha de alta: 22/03/2020"));
-        
-        // Add recipient details
-        document.add(new Paragraph("Destinatario:"));
-        document.add(new Paragraph("Vittorio Diez Otero"));
-        document.add(new Paragraph("DNI: 00538394X"));
-        document.add(new Paragraph("IGLESIA (LA)0003"));
-        document.add(new Paragraph("Astorga"));
-        
-        // Add meter readings
-        document.add(new Paragraph("Lectura actual: 637 Lectura anterior: 586 Consumo: 51 metros cúbicos."));
-        
-        // Add invoice period
-        document.add(new Paragraph("Recibo agua: Primer trimestre de 2023"));
-        
-        // Create a table
-        float[] columnWidths = {3, 3, 3, 3, 3, 3};
-        Table table = new Table(UnitValue.createPercentArray(columnWidths));
-        table.setWidth(UnitValue.createPercentValue(100));
-        
-        // Add table headers
-        table.addHeaderCell(new Cell().add(new Paragraph("Concepto")).setBackgroundColor(new DeviceRgb(224, 224, 224)));
-        table.addHeaderCell(new Cell().add(new Paragraph("Subconcepto")).setBackgroundColor(new DeviceRgb(224, 224, 224)));
-        table.addHeaderCell(new Cell().add(new Paragraph("M3 incluídos")).setBackgroundColor(new DeviceRgb(224, 224, 224)));
-        table.addHeaderCell(new Cell().add(new Paragraph("B.Imponible")).setBackgroundColor(new DeviceRgb(224, 224, 224)));
-        table.addHeaderCell(new Cell().add(new Paragraph("IVA %")).setBackgroundColor(new DeviceRgb(224, 224, 224)));
-        table.addHeaderCell(new Cell().add(new Paragraph("Importe")).setBackgroundColor(new DeviceRgb(224, 224, 224)));
-        
-        // Add table data
-        String[][] data = {
-                {"Agua", "Fijo", "30,00", "15,00", "21,00%", "03,15"},
-                {"Agua", "Primer tramo", "20,00", "03,00", "21,00%", "00,63"},
-                {"Agua", "Segundo tramo", "01,00", "00,22", "21,00%", "00,05"},
-                {"Agua", "Tercer tramo", "00,00", "00,00", "21,00%", "00,00"},
-                {"Agua", "Cuarto tramo", "00,00", "00,00", "21,00%", "00,00"},
-                {"Desagüe", "Desagüe", "00,00", "01,82", "00,00%", "00,00"},
-                {"Alcantarillado", "Fijo", "00,00", "00,18", "10,00%", "00,02"}
-        };
-        
-        for (String[] row : data) {
-            for (String cell : row) {
-                table.addCell(new Cell().add(new Paragraph(cell)));
-            }
-        }
-        
-        // Add totals row
-        table.addCell(new Cell(1, 5).add(new Paragraph("TOTALES")));
-        table.addCell(new Cell().add(new Paragraph("20,23")));
-        table.addCell(new Cell().add(new Paragraph("03,85")));
-        
-        document.add(table);
-        
-        // Add final totals
-        document.add(new Paragraph("TOTAL BASE IMPONIBLE...................................... 20,23"));
-        document.add(new Paragraph("TOTAL IVA.............................................................. 03,85"));
-        document.add(new Paragraph("TOTAL RECIBO........................................................... 24,08"));
-        
-        document.close();
-    }
-
     public static void crearXMLRecibos(Contribuyente contribuyente, Document documentRecib, Element recibosElem) {
         contador++;
         Element reciboElem = documentRecib.createElement("Recibo");
