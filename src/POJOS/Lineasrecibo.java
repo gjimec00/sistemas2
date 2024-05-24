@@ -19,6 +19,7 @@ public class Lineasrecibo  implements java.io.Serializable {
      private double m3incluidos;
      private Double bonificacion;
      private Double importeBonificacion;
+     private int idRecibo;
 
     public Lineasrecibo() {
     }
@@ -117,7 +118,13 @@ public class Lineasrecibo  implements java.io.Serializable {
     public void setImporteBonificacion(Double importeBonificacion) {
         this.importeBonificacion = importeBonificacion;
     }
-
+    public int getIdRecibo(){
+        return this.idRecibo; 
+    }
+    
+    public void setIdRecibo(int idRecibo){
+        this.idRecibo = idRecibo;
+    }
 
 
 
