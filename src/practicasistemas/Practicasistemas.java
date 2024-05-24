@@ -46,7 +46,7 @@ public class Practicasistemas {
     public static int contador = 0;
     public static double totalBaseImponible = 0;
     public static double totalIva = 0;
-    public static DecimalFormat df = new DecimalFormat("0.000");
+    public static DecimalFormat df = new DecimalFormat("0.00");
     public static String input;
     public static void main(String[] args) throws IOException {
         Map < Integer, Contribuyente > contribuyentes = new LinkedHashMap < > ();
@@ -109,6 +109,7 @@ public class Practicasistemas {
                 }
 
             }
+            GeneratePDF.generarResumen(totalBaseImponible, totalIva, input);
             //Errores DNI XML
             if (document.getDocumentElement() == null) {
                 document.appendChild(contribuyentesElem);
@@ -579,7 +580,7 @@ public class Practicasistemas {
                         ArrayList<String> fila = new ArrayList<>();
                         fila.add(ordenanzas.get(j).getConcepto());
                         fila.add(ordenanzas.get(j).getSubconcepto());
-                        fila.add(df.format(diferenciaLecturas));
+                        //fila.add(df.format(diferenciaLecturas));
                         tipoCalculo = ordenanzas.get(j).getTipoCalculo();
                         
                         //System.out.println(ordenanzas.get(j).getAcumulable() + "\n" + ordenanzas.get(j).getPrecioFijo() + "\n" + conceptosCobrar.get(i).toString());
@@ -588,11 +589,23 @@ public class Practicasistemas {
                             if (ordenanzas.get(j).getAcumulable() != null) {
                                 if (ordenanzas.get(j).getAcumulable().equals("S")) {
                                     metrosAcumulados += ordenanzas.get(j).getM3incluidos();
-                                    if (metrosAcumulados > diferenciaLecturas) {
+                                    if (metrosAcumulados > diferenciaLecturas) { 
+                                        fila.add(df.format(diferenciaLecturas));
                                         diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
+                                    }else{
+                                        fila.add(df.format(0));
                                     }
                                 } else {
-                                    diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
+                                    if(diferenciaLecturas < ordenanzas.get(j).getM3incluidos()){
+                                        fila.add(df.format(diferenciaLecturas));
+                                        diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
+                                    }else{
+                                        fila.add(df.format(ordenanzas.get(j).getM3incluidos()));
+                                        diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
+                                    }
+                                    
+                                    
+                                    
                                 }
                             }
                             if (diferenciaLecturas < 0) {
@@ -602,6 +615,7 @@ public class Practicasistemas {
 
                         if (ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getM3incluidos() == null && ordenanzas.get(j).getPorcentaje() == null) {
                             costeTramo += ordenanzas.get(j).getPrecioFijo();
+                            fila.add(df.format(0));
                         }
                         //System.out.println("Concepto: " + ordenanzas.get(j).getSubconcepto() + " " + ordenanzas.get(j).getM3incluidos() + " " + ordenanzas.get(j).getPorcentaje());
                         if (ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getPrecioFijo() == null && ordenanzas.get(j).getPorcentaje() != null) {
@@ -614,6 +628,7 @@ public class Practicasistemas {
                                 double baseOtroConcepto = listaConceptos.get(ordenanzas.get(j).getConceptoRelacionado().toString());
                                 baseOtroConcepto = baseOtroConcepto * ordenanzas.get(j).getPorcentaje() / 100;
                                 costeTramo += baseOtroConcepto;
+                                fila.add(df.format(0));
 
                             }
 
@@ -627,6 +642,7 @@ public class Practicasistemas {
                                 double baseOtroConcepto = listaConceptos.get(ordenanzas.get(j).getConceptoRelacionado().toString());
                                 baseOtroConcepto = baseOtroConcepto * ordenanzas.get(j).getPorcentaje() / 100;
                                 costeTramo += baseOtroConcepto;
+                                fila.add(df.format(0));
                             }
                         }
 
@@ -636,7 +652,9 @@ public class Practicasistemas {
                                 costeTramo = costeTramo + ordenanzas.get(j).getPreciom3() * 1;
                                 metrosUsados++;
                                 diferenciaLecturas--;
+                                
                             }
+                            fila.add(df.format(metrosUsados));
                         }
 
                         if (ordenanzas.get(j).getSubconcepto().contains("tramo") && ordenanzas.get(j).getAcumulable().equals("S")) {
@@ -647,17 +665,23 @@ public class Practicasistemas {
                                     costeTramo += ordenanzas.get(j).getPreciom3() * 1;
                                     metrosUsados++;
                                     diferenciaLecturas--;
+                                    
                                 }
+                                fila.add(df.format(metrosUsados));
+                            }else{
+                                fila.add(df.format(metrosUsados));
                             }
                         }
                         if (ordenanzas.get(j).getM3incluidos() != null && ordenanzas.get(j).getPrecioFijo() != null && ordenanzas.get(j).getPreciom3() != null) {
                             costeTramo += ordenanzas.get(j).getPrecioFijo();
                             if (diferenciaLecturas > ordenanzas.get(j).getM3incluidos()) {
+                                fila.add(df.format(diferenciaLecturas));
                                 while (diferenciaLecturas > 0) {
                                     costeTramo += ordenanzas.get(j).getPreciom3() * 1;
                                     diferenciaLecturas--;
                                 }
                             } else {
+                                fila.add(df.format(diferenciaLecturas));
                                 diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
                                 if (diferenciaLecturas < 0) {
                                     diferenciaLecturas = 0;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Recibos fechaPadron="1T de 2023" totalBaseImponible="17415,829" totalIva="3170,650" totalRecibos="20586,480">
+<Recibos fechaPadron="1T de 2023" totalBaseImponible="17415,83" totalIva="3170,65" totalRecibos="20586,48">
 <Recibo idRecibo="1">
 <Exencion>N</Exencion>
 <idFilaExcel>3</idFilaExcel>
@@ -11,9 +11,9 @@
 <lecturaActual>799.0</lecturaActual>
 <lecturaAnterior>744.0</lecturaAnterior>
 <consumo>55.0</consumo>
-<baseImponibleRecibo>28,305</baseImponibleRecibo>
-<ivaRecibo>5,381</ivaRecibo>
-<totalRecibo>33,685</totalRecibo>
+<baseImponibleRecibo>28,30</baseImponibleRecibo>
+<ivaRecibo>5,38</ivaRecibo>
+<totalRecibo>33,69</totalRecibo>
 </Recibo>
 <Recibo idRecibo="2">
 <Exencion>N</Exencion>
@@ -26,9 +26,9 @@
 <lecturaActual>727.0</lecturaActual>
 <lecturaAnterior>652.0</lecturaAnterior>
 <consumo>75.0</consumo>
-<baseImponibleRecibo>34,965</baseImponibleRecibo>
-<ivaRecibo>6,646</ivaRecibo>
-<totalRecibo>41,611</totalRecibo>
+<baseImponibleRecibo>34,96</baseImponibleRecibo>
+<ivaRecibo>6,65</ivaRecibo>
+<totalRecibo>41,61</totalRecibo>
 </Recibo>
 <Recibo idRecibo="3">
 <Exencion>N</Exencion>
@@ -41,9 +41,9 @@
 <lecturaActual>1063.0</lecturaActual>
 <lecturaAnterior>942.0</lecturaAnterior>
 <consumo>121.0</consumo>
-<baseImponibleRecibo>67,433</baseImponibleRecibo>
-<ivaRecibo>12,818</ivaRecibo>
-<totalRecibo>80,251</totalRecibo>
+<baseImponibleRecibo>67,43</baseImponibleRecibo>
+<ivaRecibo>12,82</ivaRecibo>
+<totalRecibo>80,25</totalRecibo>
 </Recibo>
 <Recibo idRecibo="4">
 <Exencion>N</Exencion>
@@ -56,9 +56,9 @@
 <lecturaActual>996.0</lecturaActual>
 <lecturaAnterior>989.0</lecturaAnterior>
 <consumo>7.0</consumo>
-<baseImponibleRecibo>22,200</baseImponibleRecibo>
-<ivaRecibo>4,220</ivaRecibo>
-<totalRecibo>26,420</totalRecibo>
+<baseImponibleRecibo>22,20</baseImponibleRecibo>
+<ivaRecibo>4,22</ivaRecibo>
+<totalRecibo>26,42</totalRecibo>
 </Recibo>
 <Recibo idRecibo="5">
 <Exencion>N</Exencion>
@@ -71,9 +71,9 @@
 <lecturaActual>471.0</lecturaActual>
 <lecturaAnterior>355.0</lecturaAnterior>
 <consumo>116.0</consumo>
-<baseImponibleRecibo>78,810</baseImponibleRecibo>
-<ivaRecibo>14,981</ivaRecibo>
-<totalRecibo>93,791</totalRecibo>
+<baseImponibleRecibo>78,81</baseImponibleRecibo>
+<ivaRecibo>14,98</ivaRecibo>
+<totalRecibo>93,79</totalRecibo>
 </Recibo>
 <Recibo idRecibo="6">
 <Exencion>N</Exencion>
@@ -86,9 +86,9 @@
 <lecturaActual>637.0</lecturaActual>
 <lecturaAnterior>586.0</lecturaAnterior>
 <consumo>51.0</consumo>
-<baseImponibleRecibo>20,230</baseImponibleRecibo>
-<ivaRecibo>3,845</ivaRecibo>
-<totalRecibo>24,075</totalRecibo>
+<baseImponibleRecibo>20,23</baseImponibleRecibo>
+<ivaRecibo>3,85</ivaRecibo>
+<totalRecibo>24,08</totalRecibo>
 </Recibo>
 <Recibo idRecibo="7">
 <Exencion>N</Exencion>
@@ -101,9 +101,9 @@
 <lecturaActual>698.0</lecturaActual>
 <lecturaAnterior>561.0</lecturaAnterior>
 <consumo>137.0</consumo>
-<baseImponibleRecibo>125,430</baseImponibleRecibo>
-<ivaRecibo>23,843</ivaRecibo>
-<totalRecibo>149,273</totalRecibo>
+<baseImponibleRecibo>125,43</baseImponibleRecibo>
+<ivaRecibo>23,84</ivaRecibo>
+<totalRecibo>149,27</totalRecibo>
 </Recibo>
 <Recibo idRecibo="8">
 <Exencion>N</Exencion>
@@ -116,9 +116,9 @@
 <lecturaActual>777.0</lecturaActual>
 <lecturaAnterior>734.0</lecturaAnterior>
 <consumo>43.0</consumo>
-<baseImponibleRecibo>25,086</baseImponibleRecibo>
-<ivaRecibo>4,769</ivaRecibo>
-<totalRecibo>29,855</totalRecibo>
+<baseImponibleRecibo>25,09</baseImponibleRecibo>
+<ivaRecibo>4,77</ivaRecibo>
+<totalRecibo>29,85</totalRecibo>
 </Recibo>
 <Recibo idRecibo="9">
 <Exencion>N</Exencion>
@@ -131,9 +131,9 @@
 <lecturaActual>832.0</lecturaActual>
 <lecturaAnterior>645.0</lecturaAnterior>
 <consumo>187.0</consumo>
-<baseImponibleRecibo>177,322</baseImponibleRecibo>
-<ivaRecibo>33,707</ivaRecibo>
-<totalRecibo>211,030</totalRecibo>
+<baseImponibleRecibo>177,32</baseImponibleRecibo>
+<ivaRecibo>33,71</ivaRecibo>
+<totalRecibo>211,03</totalRecibo>
 </Recibo>
 <Recibo idRecibo="10">
 <Exencion>N</Exencion>
@@ -146,9 +146,9 @@
 <lecturaActual>448.0</lecturaActual>
 <lecturaAnterior>448.0</lecturaAnterior>
 <consumo>0.0</consumo>
-<baseImponibleRecibo>22,200</baseImponibleRecibo>
-<ivaRecibo>4,220</ivaRecibo>
-<totalRecibo>26,420</totalRecibo>
+<baseImponibleRecibo>22,20</baseImponibleRecibo>
+<ivaRecibo>4,22</ivaRecibo>
+<totalRecibo>26,42</totalRecibo>
 </Recibo>
 <Recibo idRecibo="11">
 <Exencion>N</Exencion>
@@ -161,9 +161,9 @@
 <lecturaActual>943.0</lecturaActual>
 <lecturaAnterior>764.0</lecturaAnterior>
 <consumo>179.0</consumo>
-<baseImponibleRecibo>218,670</baseImponibleRecibo>
-<ivaRecibo>41,567</ivaRecibo>
-<totalRecibo>260,237</totalRecibo>
+<baseImponibleRecibo>218,67</baseImponibleRecibo>
+<ivaRecibo>41,57</ivaRecibo>
+<totalRecibo>260,24</totalRecibo>
 </Recibo>
 <Recibo idRecibo="12">
 <Exencion>N</Exencion>
@@ -176,9 +176,9 @@
 <lecturaActual>468.0</lecturaActual>
 <lecturaAnterior>328.0</lecturaAnterior>
 <consumo>140.0</consumo>
-<baseImponibleRecibo>850,000</baseImponibleRecibo>
-<ivaRecibo>157,500</ivaRecibo>
-<totalRecibo>1007,500</totalRecibo>
+<baseImponibleRecibo>850,00</baseImponibleRecibo>
+<ivaRecibo>157,50</ivaRecibo>
+<totalRecibo>1007,50</totalRecibo>
 </Recibo>
 <Recibo idRecibo="13">
 <Exencion>N</Exencion>
@@ -191,9 +191,9 @@
 <lecturaActual>1118.0</lecturaActual>
 <lecturaAnterior>996.0</lecturaAnterior>
 <consumo>122.0</consumo>
-<baseImponibleRecibo>751,000</baseImponibleRecibo>
-<ivaRecibo>138,600</ivaRecibo>
-<totalRecibo>889,600</totalRecibo>
+<baseImponibleRecibo>751,00</baseImponibleRecibo>
+<ivaRecibo>138,60</ivaRecibo>
+<totalRecibo>889,60</totalRecibo>
 </Recibo>
 <Recibo idRecibo="14">
 <Exencion>N</Exencion>
@@ -206,9 +206,9 @@
 <lecturaActual>1121.0</lecturaActual>
 <lecturaAnterior>968.0</lecturaAnterior>
 <consumo>153.0</consumo>
-<baseImponibleRecibo>691,125</baseImponibleRecibo>
-<ivaRecibo>128,363</ivaRecibo>
-<totalRecibo>819,487</totalRecibo>
+<baseImponibleRecibo>691,12</baseImponibleRecibo>
+<ivaRecibo>128,36</ivaRecibo>
+<totalRecibo>819,49</totalRecibo>
 </Recibo>
 <Recibo idRecibo="15">
 <Exencion>N</Exencion>
@@ -221,9 +221,9 @@
 <lecturaActual>459.0</lecturaActual>
 <lecturaAnterior>337.0</lecturaAnterior>
 <consumo>122.0</consumo>
-<baseImponibleRecibo>751,000</baseImponibleRecibo>
-<ivaRecibo>138,600</ivaRecibo>
-<totalRecibo>889,600</totalRecibo>
+<baseImponibleRecibo>751,00</baseImponibleRecibo>
+<ivaRecibo>138,60</ivaRecibo>
+<totalRecibo>889,60</totalRecibo>
 </Recibo>
 <Recibo idRecibo="16">
 <Exencion>N</Exencion>
@@ -236,9 +236,9 @@
 <lecturaActual>99.0</lecturaActual>
 <lecturaAnterior>25.0</lecturaAnterior>
 <consumo>74.0</consumo>
-<baseImponibleRecibo>182,100</baseImponibleRecibo>
-<ivaRecibo>31,185</ivaRecibo>
-<totalRecibo>213,285</totalRecibo>
+<baseImponibleRecibo>182,10</baseImponibleRecibo>
+<ivaRecibo>31,18</ivaRecibo>
+<totalRecibo>213,28</totalRecibo>
 </Recibo>
 <Recibo idRecibo="17">
 <Exencion>N</Exencion>
@@ -251,9 +251,9 @@
 <lecturaActual>204.0</lecturaActual>
 <lecturaAnterior>27.0</lecturaAnterior>
 <consumo>177.0</consumo>
-<baseImponibleRecibo>1053,500</baseImponibleRecibo>
-<ivaRecibo>196,350</ivaRecibo>
-<totalRecibo>1249,850</totalRecibo>
+<baseImponibleRecibo>1053,50</baseImponibleRecibo>
+<ivaRecibo>196,35</ivaRecibo>
+<totalRecibo>1249,85</totalRecibo>
 </Recibo>
 <Recibo idRecibo="18">
 <Exencion>N</Exencion>
@@ -266,9 +266,9 @@
 <lecturaActual>841.0</lecturaActual>
 <lecturaAnterior>799.0</lecturaAnterior>
 <consumo>42.0</consumo>
-<baseImponibleRecibo>94,650</baseImponibleRecibo>
-<ivaRecibo>14,490</ivaRecibo>
-<totalRecibo>109,140</totalRecibo>
+<baseImponibleRecibo>94,65</baseImponibleRecibo>
+<ivaRecibo>14,49</ivaRecibo>
+<totalRecibo>109,14</totalRecibo>
 </Recibo>
 <Recibo idRecibo="19">
 <Exencion>N</Exencion>
@@ -281,9 +281,9 @@
 <lecturaActual>434.0</lecturaActual>
 <lecturaAnterior>346.0</lecturaAnterior>
 <consumo>88.0</consumo>
-<baseImponibleRecibo>273,600</baseImponibleRecibo>
-<ivaRecibo>47,460</ivaRecibo>
-<totalRecibo>321,060</totalRecibo>
+<baseImponibleRecibo>273,60</baseImponibleRecibo>
+<ivaRecibo>47,46</ivaRecibo>
+<totalRecibo>321,06</totalRecibo>
 </Recibo>
 <Recibo idRecibo="20">
 <Exencion>N</Exencion>
@@ -296,9 +296,9 @@
 <lecturaActual>511.0</lecturaActual>
 <lecturaAnterior>410.0</lecturaAnterior>
 <consumo>101.0</consumo>
-<baseImponibleRecibo>226,650</baseImponibleRecibo>
-<ivaRecibo>39,690</ivaRecibo>
-<totalRecibo>266,340</totalRecibo>
+<baseImponibleRecibo>226,65</baseImponibleRecibo>
+<ivaRecibo>39,69</ivaRecibo>
+<totalRecibo>266,34</totalRecibo>
 </Recibo>
 <Recibo idRecibo="21">
 <Exencion>N</Exencion>
@@ -311,9 +311,9 @@
 <lecturaActual>238.0</lecturaActual>
 <lecturaAnterior>228.0</lecturaAnterior>
 <consumo>10.0</consumo>
-<baseImponibleRecibo>80,000</baseImponibleRecibo>
-<ivaRecibo>10,500</ivaRecibo>
-<totalRecibo>90,500</totalRecibo>
+<baseImponibleRecibo>80,00</baseImponibleRecibo>
+<ivaRecibo>10,50</ivaRecibo>
+<totalRecibo>90,50</totalRecibo>
 </Recibo>
 <Recibo idRecibo="22">
 <Exencion>N</Exencion>
@@ -326,9 +326,9 @@
 <lecturaActual>384.0</lecturaActual>
 <lecturaAnterior>306.0</lecturaAnterior>
 <consumo>78.0</consumo>
-<baseImponibleRecibo>251,600</baseImponibleRecibo>
-<ivaRecibo>43,260</ivaRecibo>
-<totalRecibo>294,860</totalRecibo>
+<baseImponibleRecibo>251,60</baseImponibleRecibo>
+<ivaRecibo>43,26</ivaRecibo>
+<totalRecibo>294,86</totalRecibo>
 </Recibo>
 <Recibo idRecibo="23">
 <Exencion>N</Exencion>
@@ -341,9 +341,9 @@
 <lecturaActual>432.0</lecturaActual>
 <lecturaAnterior>361.0</lecturaAnterior>
 <consumo>71.0</consumo>
-<baseImponibleRecibo>236,200</baseImponibleRecibo>
-<ivaRecibo>40,320</ivaRecibo>
-<totalRecibo>276,520</totalRecibo>
+<baseImponibleRecibo>236,20</baseImponibleRecibo>
+<ivaRecibo>40,32</ivaRecibo>
+<totalRecibo>276,52</totalRecibo>
 </Recibo>
 <Recibo idRecibo="24">
 <Exencion>N</Exencion>
@@ -356,9 +356,9 @@
 <lecturaActual>149.0</lecturaActual>
 <lecturaAnterior>36.0</lecturaAnterior>
 <consumo>113.0</consumo>
-<baseImponibleRecibo>328,600</baseImponibleRecibo>
-<ivaRecibo>57,960</ivaRecibo>
-<totalRecibo>386,560</totalRecibo>
+<baseImponibleRecibo>328,60</baseImponibleRecibo>
+<ivaRecibo>57,96</ivaRecibo>
+<totalRecibo>386,56</totalRecibo>
 </Recibo>
 <Recibo idRecibo="25">
 <Exencion>N</Exencion>
@@ -371,9 +371,9 @@
 <lecturaActual>426.0</lecturaActual>
 <lecturaAnterior>413.0</lecturaAnterior>
 <consumo>13.0</consumo>
-<baseImponibleRecibo>42,000</baseImponibleRecibo>
-<ivaRecibo>3,150</ivaRecibo>
-<totalRecibo>45,150</totalRecibo>
+<baseImponibleRecibo>42,00</baseImponibleRecibo>
+<ivaRecibo>3,15</ivaRecibo>
+<totalRecibo>45,15</totalRecibo>
 </Recibo>
 <Recibo idRecibo="26">
 <Exencion>N</Exencion>
@@ -386,9 +386,9 @@
 <lecturaActual>730.0</lecturaActual>
 <lecturaAnterior>721.0</lecturaAnterior>
 <consumo>9.0</consumo>
-<baseImponibleRecibo>56,000</baseImponibleRecibo>
-<ivaRecibo>4,200</ivaRecibo>
-<totalRecibo>60,200</totalRecibo>
+<baseImponibleRecibo>56,00</baseImponibleRecibo>
+<ivaRecibo>4,20</ivaRecibo>
+<totalRecibo>60,20</totalRecibo>
 </Recibo>
 <Recibo idRecibo="27">
 <Exencion>N</Exencion>
@@ -401,9 +401,9 @@
 <lecturaActual>929.0</lecturaActual>
 <lecturaAnterior>809.0</lecturaAnterior>
 <consumo>120.0</consumo>
-<baseImponibleRecibo>296,000</baseImponibleRecibo>
-<ivaRecibo>54,600</ivaRecibo>
-<totalRecibo>350,600</totalRecibo>
+<baseImponibleRecibo>296,00</baseImponibleRecibo>
+<ivaRecibo>54,60</ivaRecibo>
+<totalRecibo>350,60</totalRecibo>
 </Recibo>
 <Recibo idRecibo="28">
 <Exencion>N</Exencion>
@@ -416,9 +416,9 @@
 <lecturaActual>690.0</lecturaActual>
 <lecturaAnterior>518.0</lecturaAnterior>
 <consumo>172.0</consumo>
-<baseImponibleRecibo>400,000</baseImponibleRecibo>
-<ivaRecibo>76,440</ivaRecibo>
-<totalRecibo>476,440</totalRecibo>
+<baseImponibleRecibo>400,00</baseImponibleRecibo>
+<ivaRecibo>76,44</ivaRecibo>
+<totalRecibo>476,44</totalRecibo>
 </Recibo>
 <Recibo idRecibo="29">
 <Exencion>N</Exencion>
@@ -431,9 +431,9 @@
 <lecturaActual>345.0</lecturaActual>
 <lecturaAnterior>191.0</lecturaAnterior>
 <consumo>154.0</consumo>
-<baseImponibleRecibo>364,000</baseImponibleRecibo>
-<ivaRecibo>68,880</ivaRecibo>
-<totalRecibo>432,880</totalRecibo>
+<baseImponibleRecibo>364,00</baseImponibleRecibo>
+<ivaRecibo>68,88</ivaRecibo>
+<totalRecibo>432,88</totalRecibo>
 </Recibo>
 <Recibo idRecibo="30">
 <Exencion>N</Exencion>
@@ -446,9 +446,9 @@
 <lecturaActual>799.0</lecturaActual>
 <lecturaAnterior>742.0</lecturaAnterior>
 <consumo>57.0</consumo>
-<baseImponibleRecibo>170,000</baseImponibleRecibo>
-<ivaRecibo>28,140</ivaRecibo>
-<totalRecibo>198,140</totalRecibo>
+<baseImponibleRecibo>170,00</baseImponibleRecibo>
+<ivaRecibo>28,14</ivaRecibo>
+<totalRecibo>198,14</totalRecibo>
 </Recibo>
 <Recibo idRecibo="31">
 <Exencion>N</Exencion>
@@ -461,9 +461,9 @@
 <lecturaActual>675.0</lecturaActual>
 <lecturaAnterior>576.0</lecturaAnterior>
 <consumo>99.0</consumo>
-<baseImponibleRecibo>254,000</baseImponibleRecibo>
-<ivaRecibo>45,780</ivaRecibo>
-<totalRecibo>299,780</totalRecibo>
+<baseImponibleRecibo>254,00</baseImponibleRecibo>
+<ivaRecibo>45,78</ivaRecibo>
+<totalRecibo>299,78</totalRecibo>
 </Recibo>
 <Recibo idRecibo="32">
 <Exencion>N</Exencion>
@@ -476,9 +476,9 @@
 <lecturaActual>488.0</lecturaActual>
 <lecturaAnterior>423.0</lecturaAnterior>
 <consumo>65.0</consumo>
-<baseImponibleRecibo>186,000</baseImponibleRecibo>
-<ivaRecibo>31,500</ivaRecibo>
-<totalRecibo>217,500</totalRecibo>
+<baseImponibleRecibo>186,00</baseImponibleRecibo>
+<ivaRecibo>31,50</ivaRecibo>
+<totalRecibo>217,50</totalRecibo>
 </Recibo>
 <Recibo idRecibo="33">
 <Exencion>N</Exencion>
@@ -491,9 +491,9 @@
 <lecturaActual>371.0</lecturaActual>
 <lecturaAnterior>330.0</lecturaAnterior>
 <consumo>41.0</consumo>
-<baseImponibleRecibo>103,500</baseImponibleRecibo>
-<ivaRecibo>16,065</ivaRecibo>
-<totalRecibo>119,565</totalRecibo>
+<baseImponibleRecibo>103,50</baseImponibleRecibo>
+<ivaRecibo>16,07</ivaRecibo>
+<totalRecibo>119,56</totalRecibo>
 </Recibo>
 <Recibo idRecibo="34">
 <Exencion>N</Exencion>
@@ -506,9 +506,9 @@
 <lecturaActual>1082.0</lecturaActual>
 <lecturaAnterior>890.0</lecturaAnterior>
 <consumo>192.0</consumo>
-<baseImponibleRecibo>440,000</baseImponibleRecibo>
-<ivaRecibo>84,840</ivaRecibo>
-<totalRecibo>524,840</totalRecibo>
+<baseImponibleRecibo>440,00</baseImponibleRecibo>
+<ivaRecibo>84,84</ivaRecibo>
+<totalRecibo>524,84</totalRecibo>
 </Recibo>
 <Recibo idRecibo="35">
 <Exencion>N</Exencion>
@@ -521,9 +521,9 @@
 <lecturaActual>820.0</lecturaActual>
 <lecturaAnterior>732.0</lecturaAnterior>
 <consumo>88.0</consumo>
-<baseImponibleRecibo>232,000</baseImponibleRecibo>
-<ivaRecibo>41,160</ivaRecibo>
-<totalRecibo>273,160</totalRecibo>
+<baseImponibleRecibo>232,00</baseImponibleRecibo>
+<ivaRecibo>41,16</ivaRecibo>
+<totalRecibo>273,16</totalRecibo>
 </Recibo>
 <Recibo idRecibo="36">
 <Exencion>N</Exencion>
@@ -536,9 +536,9 @@
 <lecturaActual>335.0</lecturaActual>
 <lecturaAnterior>178.0</lecturaAnterior>
 <consumo>157.0</consumo>
-<baseImponibleRecibo>277,500</baseImponibleRecibo>
-<ivaRecibo>52,605</ivaRecibo>
-<totalRecibo>330,105</totalRecibo>
+<baseImponibleRecibo>277,50</baseImponibleRecibo>
+<ivaRecibo>52,60</ivaRecibo>
+<totalRecibo>330,11</totalRecibo>
 </Recibo>
 <Recibo idRecibo="37">
 <Exencion>N</Exencion>
@@ -551,9 +551,9 @@
 <lecturaActual>721.0</lecturaActual>
 <lecturaAnterior>595.0</lecturaAnterior>
 <consumo>126.0</consumo>
-<baseImponibleRecibo>308,000</baseImponibleRecibo>
-<ivaRecibo>57,120</ivaRecibo>
-<totalRecibo>365,120</totalRecibo>
+<baseImponibleRecibo>308,00</baseImponibleRecibo>
+<ivaRecibo>57,12</ivaRecibo>
+<totalRecibo>365,12</totalRecibo>
 </Recibo>
 <Recibo idRecibo="38">
 <Exencion>N</Exencion>
@@ -566,9 +566,9 @@
 <lecturaActual>596.0</lecturaActual>
 <lecturaAnterior>412.0</lecturaAnterior>
 <consumo>184.0</consumo>
-<baseImponibleRecibo>424,000</baseImponibleRecibo>
-<ivaRecibo>81,480</ivaRecibo>
-<totalRecibo>505,480</totalRecibo>
+<baseImponibleRecibo>424,00</baseImponibleRecibo>
+<ivaRecibo>81,48</ivaRecibo>
+<totalRecibo>505,48</totalRecibo>
 </Recibo>
 <Recibo idRecibo="39">
 <Exencion>N</Exencion>
@@ -581,9 +581,9 @@
 <lecturaActual>388.0</lecturaActual>
 <lecturaAnterior>344.0</lecturaAnterior>
 <consumo>44.0</consumo>
-<baseImponibleRecibo>144,000</baseImponibleRecibo>
-<ivaRecibo>22,680</ivaRecibo>
-<totalRecibo>166,680</totalRecibo>
+<baseImponibleRecibo>144,00</baseImponibleRecibo>
+<ivaRecibo>22,68</ivaRecibo>
+<totalRecibo>166,68</totalRecibo>
 </Recibo>
 <Recibo idRecibo="40">
 <Exencion>N</Exencion>
@@ -596,9 +596,9 @@
 <lecturaActual>1009.0</lecturaActual>
 <lecturaAnterior>982.0</lecturaAnterior>
 <consumo>27.0</consumo>
-<baseImponibleRecibo>22,200</baseImponibleRecibo>
-<ivaRecibo>4,220</ivaRecibo>
-<totalRecibo>26,420</totalRecibo>
+<baseImponibleRecibo>22,20</baseImponibleRecibo>
+<ivaRecibo>4,22</ivaRecibo>
+<totalRecibo>26,42</totalRecibo>
 </Recibo>
 <Recibo idRecibo="41">
 <Exencion>N</Exencion>
@@ -611,9 +611,9 @@
 <lecturaActual>935.0</lecturaActual>
 <lecturaAnterior>768.0</lecturaAnterior>
 <consumo>167.0</consumo>
-<baseImponibleRecibo>192,030</baseImponibleRecibo>
-<ivaRecibo>36,503</ivaRecibo>
-<totalRecibo>228,533</totalRecibo>
+<baseImponibleRecibo>192,03</baseImponibleRecibo>
+<ivaRecibo>36,50</ivaRecibo>
+<totalRecibo>228,53</totalRecibo>
 </Recibo>
 <Recibo idRecibo="42">
 <Exencion>N</Exencion>
@@ -626,9 +626,9 @@
 <lecturaActual>528.0</lecturaActual>
 <lecturaAnterior>446.0</lecturaAnterior>
 <consumo>82.0</consumo>
-<baseImponibleRecibo>27,972</baseImponibleRecibo>
-<ivaRecibo>5,317</ivaRecibo>
-<totalRecibo>33,289</totalRecibo>
+<baseImponibleRecibo>27,97</baseImponibleRecibo>
+<ivaRecibo>5,32</ivaRecibo>
+<totalRecibo>33,29</totalRecibo>
 </Recibo>
 <Recibo idRecibo="43">
 <Exencion>N</Exencion>
@@ -641,9 +641,9 @@
 <lecturaActual>370.0</lecturaActual>
 <lecturaAnterior>248.0</lecturaAnterior>
 <consumo>122.0</consumo>
-<baseImponibleRecibo>92,130</baseImponibleRecibo>
-<ivaRecibo>17,513</ivaRecibo>
-<totalRecibo>109,643</totalRecibo>
+<baseImponibleRecibo>92,13</baseImponibleRecibo>
+<ivaRecibo>17,51</ivaRecibo>
+<totalRecibo>109,64</totalRecibo>
 </Recibo>
 <Recibo idRecibo="44">
 <Exencion>N</Exencion>
@@ -656,9 +656,9 @@
 <lecturaActual>1052.0</lecturaActual>
 <lecturaAnterior>960.0</lecturaAnterior>
 <consumo>92.0</consumo>
-<baseImponibleRecibo>40,626</baseImponibleRecibo>
-<ivaRecibo>7,723</ivaRecibo>
-<totalRecibo>48,349</totalRecibo>
+<baseImponibleRecibo>40,63</baseImponibleRecibo>
+<ivaRecibo>7,72</ivaRecibo>
+<totalRecibo>48,35</totalRecibo>
 </Recibo>
 <Recibo idRecibo="45">
 <Exencion>N</Exencion>
@@ -671,9 +671,9 @@
 <lecturaActual>917.0</lecturaActual>
 <lecturaAnterior>889.0</lecturaAnterior>
 <consumo>28.0</consumo>
-<baseImponibleRecibo>22,200</baseImponibleRecibo>
-<ivaRecibo>4,220</ivaRecibo>
-<totalRecibo>26,420</totalRecibo>
+<baseImponibleRecibo>22,20</baseImponibleRecibo>
+<ivaRecibo>4,22</ivaRecibo>
+<totalRecibo>26,42</totalRecibo>
 </Recibo>
 <Recibo idRecibo="46">
 <Exencion>N</Exencion>
@@ -686,9 +686,9 @@
 <lecturaActual>681.0</lecturaActual>
 <lecturaAnterior>658.0</lecturaAnterior>
 <consumo>23.0</consumo>
-<baseImponibleRecibo>22,200</baseImponibleRecibo>
-<ivaRecibo>4,220</ivaRecibo>
-<totalRecibo>26,420</totalRecibo>
+<baseImponibleRecibo>22,20</baseImponibleRecibo>
+<ivaRecibo>4,22</ivaRecibo>
+<totalRecibo>26,42</totalRecibo>
 </Recibo>
 <Recibo idRecibo="47">
 <Exencion>N</Exencion>
@@ -701,9 +701,9 @@
 <lecturaActual>1166.0</lecturaActual>
 <lecturaAnterior>983.0</lecturaAnterior>
 <consumo>183.0</consumo>
-<baseImponibleRecibo>170,662</baseImponibleRecibo>
-<ivaRecibo>32,441</ivaRecibo>
-<totalRecibo>203,104</totalRecibo>
+<baseImponibleRecibo>170,66</baseImponibleRecibo>
+<ivaRecibo>32,44</ivaRecibo>
+<totalRecibo>203,10</totalRecibo>
 </Recibo>
 <Recibo idRecibo="48">
 <Exencion>N</Exencion>
@@ -716,9 +716,9 @@
 <lecturaActual>454.0</lecturaActual>
 <lecturaAnterior>274.0</lecturaAnterior>
 <consumo>180.0</consumo>
-<baseImponibleRecibo>220,890</baseImponibleRecibo>
-<ivaRecibo>41,989</ivaRecibo>
-<totalRecibo>262,879</totalRecibo>
+<baseImponibleRecibo>220,89</baseImponibleRecibo>
+<ivaRecibo>41,99</ivaRecibo>
+<totalRecibo>262,88</totalRecibo>
 </Recibo>
 <Recibo idRecibo="49">
 <Exencion>N</Exencion>
@@ -731,9 +731,9 @@
 <lecturaActual>936.0</lecturaActual>
 <lecturaAnterior>749.0</lecturaAnterior>
 <consumo>187.0</consumo>
-<baseImponibleRecibo>236,430</baseImponibleRecibo>
-<ivaRecibo>44,943</ivaRecibo>
-<totalRecibo>281,373</totalRecibo>
+<baseImponibleRecibo>236,43</baseImponibleRecibo>
+<ivaRecibo>44,94</ivaRecibo>
+<totalRecibo>281,37</totalRecibo>
 </Recibo>
 <Recibo idRecibo="50">
 <Exencion>N</Exencion>
@@ -746,9 +746,9 @@
 <lecturaActual>961.0</lecturaActual>
 <lecturaAnterior>943.0</lecturaAnterior>
 <consumo>18.0</consumo>
-<baseImponibleRecibo>22,200</baseImponibleRecibo>
-<ivaRecibo>4,220</ivaRecibo>
-<totalRecibo>26,420</totalRecibo>
+<baseImponibleRecibo>22,20</baseImponibleRecibo>
+<ivaRecibo>4,22</ivaRecibo>
+<totalRecibo>26,42</totalRecibo>
 </Recibo>
 <Recibo idRecibo="51">
 <Exencion>N</Exencion>
@@ -761,9 +761,9 @@
 <lecturaActual>654.0</lecturaActual>
 <lecturaAnterior>545.0</lecturaAnterior>
 <consumo>109.0</consumo>
-<baseImponibleRecibo>47,453</baseImponibleRecibo>
-<ivaRecibo>9,020</ivaRecibo>
-<totalRecibo>56,473</totalRecibo>
+<baseImponibleRecibo>47,45</baseImponibleRecibo>
+<ivaRecibo>9,02</ivaRecibo>
+<totalRecibo>56,47</totalRecibo>
 </Recibo>
 <Recibo idRecibo="52">
 <Exencion>N</Exencion>
@@ -776,9 +776,9 @@
 <lecturaActual>212.0</lecturaActual>
 <lecturaAnterior>200.0</lecturaAnterior>
 <consumo>12.0</consumo>
-<baseImponibleRecibo>22,200</baseImponibleRecibo>
-<ivaRecibo>4,220</ivaRecibo>
-<totalRecibo>26,420</totalRecibo>
+<baseImponibleRecibo>22,20</baseImponibleRecibo>
+<ivaRecibo>4,22</ivaRecibo>
+<totalRecibo>26,42</totalRecibo>
 </Recibo>
 <Recibo idRecibo="53">
 <Exencion>N</Exencion>
@@ -791,9 +791,9 @@
 <lecturaActual>489.0</lecturaActual>
 <lecturaAnterior>368.0</lecturaAnterior>
 <consumo>121.0</consumo>
-<baseImponibleRecibo>745,500</baseImponibleRecibo>
-<ivaRecibo>137,550</ivaRecibo>
-<totalRecibo>883,050</totalRecibo>
+<baseImponibleRecibo>745,50</baseImponibleRecibo>
+<ivaRecibo>137,55</ivaRecibo>
+<totalRecibo>883,05</totalRecibo>
 </Recibo>
 <Recibo idRecibo="54">
 <Exencion>N</Exencion>
@@ -806,9 +806,9 @@
 <lecturaActual>838.0</lecturaActual>
 <lecturaAnterior>692.0</lecturaAnterior>
 <consumo>146.0</consumo>
-<baseImponibleRecibo>662,250</baseImponibleRecibo>
-<ivaRecibo>122,850</ivaRecibo>
-<totalRecibo>785,100</totalRecibo>
+<baseImponibleRecibo>662,25</baseImponibleRecibo>
+<ivaRecibo>122,85</ivaRecibo>
+<totalRecibo>785,10</totalRecibo>
 </Recibo>
 <Recibo idRecibo="55">
 <Exencion>N</Exencion>
@@ -821,9 +821,9 @@
 <lecturaActual>494.0</lecturaActual>
 <lecturaAnterior>488.0</lecturaAnterior>
 <consumo>6.0</consumo>
-<baseImponibleRecibo>80,000</baseImponibleRecibo>
-<ivaRecibo>10,500</ivaRecibo>
-<totalRecibo>90,500</totalRecibo>
+<baseImponibleRecibo>80,00</baseImponibleRecibo>
+<ivaRecibo>10,50</ivaRecibo>
+<totalRecibo>90,50</totalRecibo>
 </Recibo>
 <Recibo idRecibo="56">
 <Exencion>N</Exencion>
@@ -836,9 +836,9 @@
 <lecturaActual>520.0</lecturaActual>
 <lecturaAnterior>397.0</lecturaAnterior>
 <consumo>123.0</consumo>
-<baseImponibleRecibo>756,500</baseImponibleRecibo>
-<ivaRecibo>139,650</ivaRecibo>
-<totalRecibo>896,150</totalRecibo>
+<baseImponibleRecibo>756,50</baseImponibleRecibo>
+<ivaRecibo>139,65</ivaRecibo>
+<totalRecibo>896,15</totalRecibo>
 </Recibo>
 <Recibo idRecibo="57">
 <Exencion>N</Exencion>
@@ -851,9 +851,9 @@
 <lecturaActual>407.0</lecturaActual>
 <lecturaAnterior>236.0</lecturaAnterior>
 <consumo>171.0</consumo>
-<baseImponibleRecibo>1020,500</baseImponibleRecibo>
-<ivaRecibo>190,050</ivaRecibo>
-<totalRecibo>1210,550</totalRecibo>
+<baseImponibleRecibo>1020,50</baseImponibleRecibo>
+<ivaRecibo>190,05</ivaRecibo>
+<totalRecibo>1210,55</totalRecibo>
 </Recibo>
 <Recibo idRecibo="58">
 <Exencion>N</Exencion>
@@ -866,9 +866,9 @@
 <lecturaActual>161.0</lecturaActual>
 <lecturaAnterior>68.0</lecturaAnterior>
 <consumo>93.0</consumo>
-<baseImponibleRecibo>284,600</baseImponibleRecibo>
-<ivaRecibo>49,560</ivaRecibo>
-<totalRecibo>334,160</totalRecibo>
+<baseImponibleRecibo>284,60</baseImponibleRecibo>
+<ivaRecibo>49,56</ivaRecibo>
+<totalRecibo>334,16</totalRecibo>
 </Recibo>
 <Recibo idRecibo="59">
 <Exencion>N</Exencion>
@@ -881,9 +881,9 @@
 <lecturaActual>673.0</lecturaActual>
 <lecturaAnterior>633.0</lecturaAnterior>
 <consumo>40.0</consumo>
-<baseImponibleRecibo>124,000</baseImponibleRecibo>
-<ivaRecibo>18,900</ivaRecibo>
-<totalRecibo>142,900</totalRecibo>
+<baseImponibleRecibo>124,00</baseImponibleRecibo>
+<ivaRecibo>18,90</ivaRecibo>
+<totalRecibo>142,90</totalRecibo>
 </Recibo>
 <Recibo idRecibo="60">
 <Exencion>N</Exencion>
@@ -896,9 +896,9 @@
 <lecturaActual>543.0</lecturaActual>
 <lecturaAnterior>418.0</lecturaAnterior>
 <consumo>125.0</consumo>
-<baseImponibleRecibo>767,500</baseImponibleRecibo>
-<ivaRecibo>141,750</ivaRecibo>
-<totalRecibo>909,250</totalRecibo>
+<baseImponibleRecibo>767,50</baseImponibleRecibo>
+<ivaRecibo>141,75</ivaRecibo>
+<totalRecibo>909,25</totalRecibo>
 </Recibo>
 <Recibo idRecibo="61">
 <Exencion>N</Exencion>
@@ -911,9 +911,9 @@
 <lecturaActual>306.0</lecturaActual>
 <lecturaAnterior>250.0</lecturaAnterior>
 <consumo>56.0</consumo>
-<baseImponibleRecibo>141,600</baseImponibleRecibo>
-<ivaRecibo>22,260</ivaRecibo>
-<totalRecibo>163,860</totalRecibo>
+<baseImponibleRecibo>141,60</baseImponibleRecibo>
+<ivaRecibo>22,26</ivaRecibo>
+<totalRecibo>163,86</totalRecibo>
 </Recibo>
 <Recibo idRecibo="62">
 <Exencion>N</Exencion>
@@ -926,9 +926,9 @@
 <lecturaActual>164.0</lecturaActual>
 <lecturaAnterior>76.0</lecturaAnterior>
 <consumo>88.0</consumo>
-<baseImponibleRecibo>205,200</baseImponibleRecibo>
-<ivaRecibo>35,595</ivaRecibo>
-<totalRecibo>240,795</totalRecibo>
+<baseImponibleRecibo>205,20</baseImponibleRecibo>
+<ivaRecibo>35,59</ivaRecibo>
+<totalRecibo>240,79</totalRecibo>
 </Recibo>
 <Recibo idRecibo="63">
 <Exencion>N</Exencion>
@@ -941,9 +941,9 @@
 <lecturaActual>624.0</lecturaActual>
 <lecturaAnterior>607.0</lecturaAnterior>
 <consumo>17.0</consumo>
-<baseImponibleRecibo>56,000</baseImponibleRecibo>
-<ivaRecibo>4,200</ivaRecibo>
-<totalRecibo>60,200</totalRecibo>
+<baseImponibleRecibo>56,00</baseImponibleRecibo>
+<ivaRecibo>4,20</ivaRecibo>
+<totalRecibo>60,20</totalRecibo>
 </Recibo>
 <Recibo idRecibo="64">
 <Exencion>N</Exencion>
@@ -956,9 +956,9 @@
 <lecturaActual>1016.0</lecturaActual>
 <lecturaAnterior>964.0</lecturaAnterior>
 <consumo>52.0</consumo>
-<baseImponibleRecibo>120,000</baseImponibleRecibo>
-<ivaRecibo>19,530</ivaRecibo>
-<totalRecibo>139,530</totalRecibo>
+<baseImponibleRecibo>120,00</baseImponibleRecibo>
+<ivaRecibo>19,53</ivaRecibo>
+<totalRecibo>139,53</totalRecibo>
 </Recibo>
 <Recibo idRecibo="65">
 <Exencion>N</Exencion>
@@ -971,9 +971,9 @@
 <lecturaActual>207.0</lecturaActual>
 <lecturaAnterior>72.0</lecturaAnterior>
 <consumo>135.0</consumo>
-<baseImponibleRecibo>326,000</baseImponibleRecibo>
-<ivaRecibo>60,900</ivaRecibo>
-<totalRecibo>386,900</totalRecibo>
+<baseImponibleRecibo>326,00</baseImponibleRecibo>
+<ivaRecibo>60,90</ivaRecibo>
+<totalRecibo>386,90</totalRecibo>
 </Recibo>
 <Recibo idRecibo="66">
 <Exencion>N</Exencion>
@@ -986,9 +986,9 @@
 <lecturaActual>315.0</lecturaActual>
 <lecturaAnterior>188.0</lecturaAnterior>
 <consumo>127.0</consumo>
-<baseImponibleRecibo>232,500</baseImponibleRecibo>
-<ivaRecibo>43,155</ivaRecibo>
-<totalRecibo>275,655</totalRecibo>
+<baseImponibleRecibo>232,50</baseImponibleRecibo>
+<ivaRecibo>43,16</ivaRecibo>
+<totalRecibo>275,65</totalRecibo>
 </Recibo>
 <Recibo idRecibo="67">
 <Exencion>N</Exencion>
@@ -1001,9 +1001,9 @@
 <lecturaActual>704.0</lecturaActual>
 <lecturaAnterior>509.0</lecturaAnterior>
 <consumo>195.0</consumo>
-<baseImponibleRecibo>254,190</baseImponibleRecibo>
-<ivaRecibo>48,319</ivaRecibo>
-<totalRecibo>302,509</totalRecibo>
+<baseImponibleRecibo>254,19</baseImponibleRecibo>
+<ivaRecibo>48,32</ivaRecibo>
+<totalRecibo>302,51</totalRecibo>
 </Recibo>
 <Recibo idRecibo="68">
 <Exencion>N</Exencion>
@@ -1016,9 +1016,9 @@
 <lecturaActual>874.0</lecturaActual>
 <lecturaAnterior>757.0</lecturaAnterior>
 <consumo>117.0</consumo>
-<baseImponibleRecibo>81,030</baseImponibleRecibo>
-<ivaRecibo>15,403</ivaRecibo>
-<totalRecibo>96,433</totalRecibo>
+<baseImponibleRecibo>81,03</baseImponibleRecibo>
+<ivaRecibo>15,40</ivaRecibo>
+<totalRecibo>96,43</totalRecibo>
 </Recibo>
 <Recibo idRecibo="69">
 <Exencion>N</Exencion>
@@ -1031,9 +1031,9 @@
 <lecturaActual>65.0</lecturaActual>
 <lecturaAnterior>11.0</lecturaAnterior>
 <consumo>54.0</consumo>
-<baseImponibleRecibo>27,972</baseImponibleRecibo>
-<ivaRecibo>5,317</ivaRecibo>
-<totalRecibo>33,289</totalRecibo>
+<baseImponibleRecibo>27,97</baseImponibleRecibo>
+<ivaRecibo>5,32</ivaRecibo>
+<totalRecibo>33,29</totalRecibo>
 </Recibo>
 <Recibo idRecibo="70">
 <Exencion>S</Exencion>
@@ -1046,9 +1046,9 @@
 <lecturaActual>1020.0</lecturaActual>
 <lecturaAnterior>944.0</lecturaAnterior>
 <consumo>76.0</consumo>
-<baseImponibleRecibo>0,000</baseImponibleRecibo>
-<ivaRecibo>0,000</ivaRecibo>
-<totalRecibo>0,000</totalRecibo>
+<baseImponibleRecibo>0,00</baseImponibleRecibo>
+<ivaRecibo>0,00</ivaRecibo>
+<totalRecibo>0,00</totalRecibo>
 </Recibo>
 <Recibo idRecibo="71">
 <Exencion>N</Exencion>
@@ -1061,9 +1061,9 @@
 <lecturaActual>354.0</lecturaActual>
 <lecturaAnterior>287.0</lecturaAnterior>
 <consumo>67.0</consumo>
-<baseImponibleRecibo>32,301</baseImponibleRecibo>
-<ivaRecibo>6,140</ivaRecibo>
-<totalRecibo>38,441</totalRecibo>
+<baseImponibleRecibo>32,30</baseImponibleRecibo>
+<ivaRecibo>6,14</ivaRecibo>
+<totalRecibo>38,44</totalRecibo>
 </Recibo>
 <Recibo idRecibo="72">
 <Exencion>N</Exencion>
@@ -1076,9 +1076,9 @@
 <lecturaActual>838.0</lecturaActual>
 <lecturaAnterior>728.0</lecturaAnterior>
 <consumo>110.0</consumo>
-<baseImponibleRecibo>49,118</baseImponibleRecibo>
-<ivaRecibo>9,337</ivaRecibo>
-<totalRecibo>58,454</totalRecibo>
+<baseImponibleRecibo>49,12</baseImponibleRecibo>
+<ivaRecibo>9,34</ivaRecibo>
+<totalRecibo>58,45</totalRecibo>
 </Recibo>
 <Recibo idRecibo="73">
 <Exencion>N</Exencion>
@@ -1091,8 +1091,8 @@
 <lecturaActual>191.0</lecturaActual>
 <lecturaAnterior>174.0</lecturaAnterior>
 <consumo>17.0</consumo>
-<baseImponibleRecibo>22,200</baseImponibleRecibo>
-<ivaRecibo>4,220</ivaRecibo>
-<totalRecibo>26,420</totalRecibo>
+<baseImponibleRecibo>22,20</baseImponibleRecibo>
+<ivaRecibo>4,22</ivaRecibo>
+<totalRecibo>26,42</totalRecibo>
 </Recibo>
 </Recibos>

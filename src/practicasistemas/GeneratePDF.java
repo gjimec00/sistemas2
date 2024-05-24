@@ -164,7 +164,7 @@ public class GeneratePDF {
 
             // Add totals row
             table.addCell(new Cell(1, 3).add(new Paragraph("TOTALES")).setMargin(5));
-            table.addCell(new Cell().add(new Paragraph(df.format(costeTotal)).setMargin(5)));
+            table.addCell(new Cell().add(new Paragraph(df.format(contribuyente.getBaseImponible())).setMargin(5)));
             table.addCell(new Cell(5, 7).add(new Paragraph(df.format(ivaTotal)).setMargin(5).setTextAlignment(TextAlignment.CENTER)));
 
             document.add(table);
@@ -182,16 +182,14 @@ public class GeneratePDF {
             table.addHeaderCell(new Cell().add(new Paragraph("IVA %")).setBackgroundColor(new DeviceRgb(224, 224, 224)).setMargin(5));
             table.addHeaderCell(new Cell().add(new Paragraph("Importe")).setBackgroundColor(new DeviceRgb(224, 224, 224)).setMargin(5));
 
-            // Add table data
-            String[][] data = {
-                    {"Agua", "Fijo", "30,00", "15,00", "21,00%", "03,15"},
-                    {"Agua", "Primer tramo", "20,00", "03,00", "21,00%", "00,63"},
-                    {"Agua", "Segundo tramo", "01,00", "00,22", "21,00%", "00,05"},
-                    {"Agua", "Tercer tramo", "00,00", "00,00", "21,00%", "00,00"},
-                    {"Agua", "Cuarto tramo", "00,00", "00,00", "21,00%", "00,00"},
-                    {"Desagüe", "Desagüe", "00,00", "01,82", "00,00%", "00,00"},
-                    {"Alcantarillado", "Fijo", "00,00", "00,18", "10,00%", "00,02"}
-            };
+            int rows = datosRecibo.size();
+            int cols = datosRecibo.get(0).size();
+            String[][] array = new String[rows][];
+            for (int i = 0; i < rows; i++) {
+                ArrayList<String> sublist = datosRecibo.get(i);
+                array[i] = sublist.toArray(new String[0]); // Convertir la sublista a array y asignarla
+            }
+            String[][] data = array;
 
             for (String[] row : data) {
                 for (String cell : row) {
@@ -201,7 +199,7 @@ public class GeneratePDF {
 
             // Add totals row
             table.addCell(new Cell(1, 3).add(new Paragraph("TOTALES")).setMargin(5));
-            table.addCell(new Cell().add(new Paragraph(df.format(costeTotal))).setMargin(5));
+            table.addCell(new Cell().add(new Paragraph(df.format(contribuyente.getBaseImponible()))).setMargin(5));
             table.addCell(new Cell(5, 6).add(new Paragraph(df.format(ivaTotal))).setMargin(5).setTextAlignment(TextAlignment.CENTER));
 
             document.add(table);
@@ -220,7 +218,7 @@ public class GeneratePDF {
 
         // Invoice details
         Cell priceCell = new Cell()
-                .add(new Paragraph(df.format(costeTotal)).setTextAlignment(TextAlignment.RIGHT).setMarginTop(30))
+                .add(new Paragraph(df.format(contribuyente.getBaseImponible())).setTextAlignment(TextAlignment.RIGHT).setMarginTop(30))
                 .add(new Paragraph(df.format(ivaTotal)).setTextAlignment(TextAlignment.RIGHT).setMarginBottom(10))
                 .setBorder(Border.NO_BORDER)
                 .setBorderBottom(new SolidBorder(2));
@@ -239,14 +237,49 @@ public class GeneratePDF {
         finalTable.addCell(totalFinalCell);
 
         // Invoice details
-        double totalRec = costeTotal + ivaTotal;
         Cell priceFinalCell = new Cell()
-                .add(new Paragraph(df.format(totalRec)).setTextAlignment(TextAlignment.RIGHT))
+                .add(new Paragraph(df.format(costeTotal)).setTextAlignment(TextAlignment.RIGHT))
                 .setBorder(Border.NO_BORDER);
         finalTable.addCell(priceFinalCell);
 
         document.add(finalTable);
         
+        document.close();
+    }
+    public static void generarResumen(double totalBaseImponible, double totalIva, String input) throws IOException{
+        String dest = "resources/recibos/resumen.pdf";
+        DecimalFormat df = new DecimalFormat("0.00");
+        PdfWriter writer = new PdfWriter(dest);
+        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document(pdf, PageSize.LETTER);
+        double recibos = totalBaseImponible + totalIva;
+        String trimestre = input.substring(0, 2);
+        int year = Integer.parseInt(input.substring(3));
+        String trimestreT;
+        if (trimestre.equals("1T")) {
+            trimestreT = "Primer trimestre";
+        } else if (trimestre.equals("2T")) {
+            trimestreT = "Segundo trimestre";
+        } else if (trimestre.equals("3T")) {
+            trimestreT = "Tercer trimestre";
+        } else {
+            trimestreT = "Cuarto trimestre";
+        }
+
+        float[] tableWidth = {1};
+        Table table = new Table(UnitValue.createPercentArray(tableWidth));
+        table.setWidth(UnitValue.createPercentValue(100));
+
+        Cell cell = new Cell()
+            .add(new Paragraph("RESUMEN PADRON DE AGUA " + trimestreT + " de " + Integer.toString(year)))
+            .add(new Paragraph("TOTAL BASE IMPONIBLE................." + df.format(totalBaseImponible)))
+            .add(new Paragraph("TOTAL IVA......................................... " + df.format(totalIva)))
+            .add(new Paragraph("TOTAL RECIBOS.............................. " + df.format(recibos)))
+            .setBorder(new SolidBorder(1));
+        table.addCell(cell);
+
+        document.add(table);
+
         document.close();
     }
 }
