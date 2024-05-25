@@ -40,6 +40,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import POJOS.Recibos;
+import POJOS.Lecturas;
+import POJOS.RelContribuyenteOrdenanza;
 /**
  *
  * @author Guille & Ovi 😎
@@ -569,12 +572,20 @@ public class Practicasistemas {
             
             int lastIdRecibo = (int) lastRecQuery.uniqueResult() + 1;
             tx.commit();
+            Recibos recibo = new Recibos();
+            RelContribuyenteOrdenanza relConOrd = new RelContribuyenteOrdenanza();
+            List < Lineasrecibo >  listaLineas = new ArrayList <> ();
             System.out.println(contribuyente.getNombre());
             ArrayList<ArrayList<String>> datosRecibo = new ArrayList<>();
             List < String > lecturas = new ArrayList < > (contribuyente.getLecturases());
             String tipoCalculo = "";
             if (lecturas.size() == 1) {
                 lecturas.add(lecturas.get(0));
+            }
+            if (Double.parseDouble(lecturas.get(1)) < Double.parseDouble(lecturas.get(0))) {
+                String aux = lecturas.get(0);
+                lecturas.set(0, lecturas.get(1));
+                lecturas.set(1, aux);
             }
             double diferenciaLecturas = Math.abs(Double.parseDouble(lecturas.get(1)) - Double.parseDouble(lecturas.get(0)));
 
@@ -597,6 +608,10 @@ public class Practicasistemas {
                     if (Integer.parseInt(conceptosCobrar.get(i)) == ordenanzas.get(j).getIdOrdenanza()) {
                         /*StringBuilder sb = new StringBuilder();
                         sb.append("fila").append()*/
+                        relConOrd.setContribuyente(contribuyente);
+                        relConOrd.setOrdenanza(ordenanzas.get(j));
+                        DBManager.saveRelCon(relConOrd);
+                        
                         Lineasrecibo linea = new Lineasrecibo();
                         ArrayList<String> fila = new ArrayList<>();
                         fila.add(ordenanzas.get(j).getConcepto());
@@ -745,7 +760,7 @@ public class Practicasistemas {
                         System.out.println(df.format(costeTramo) + " iva tramo: " + ivaTramo);
                         datosRecibo.add(fila);
                         linea.setIdRecibo(lastIdRecibo);
-                        //DBManager.saveLineasRecibo(linea);
+                        listaLineas.add(linea);
                     }
 
                 }
@@ -795,7 +810,7 @@ public class Practicasistemas {
                         costeConcepto += costeTramo;
                         datosRecibo.add(fila);
                         linea.setIdRecibo(lastIdRecibo);
-                        //DBManager.saveLineasRecibo(linea);
+                        listaLineas.add(linea);
                     }
 
                 }
@@ -815,10 +830,45 @@ public class Practicasistemas {
             totalBaseImponible += costeTotal;
             contribuyente.setIvaRecibo(ivaTotal);
             totalIva += ivaTotal;
+            recibo.setTotalBaseImponible(costeTotal);
+            recibo.setTotalIva(ivaTotal);
             costeTotal += ivaTotal;
             System.out.println(contribuyente.getNombre() + ": " + costeTotal);
             crearXMLRecibos(contribuyente, documentRecib, recibosElem, lastIdRecibo);
             GeneratePDF.generarPDFs(contribuyente, datosRecibo, costeTotal, ivaTotal, tipoCalculo, input);
+
+
+            recibo.setNumeroRecibo(lastIdRecibo);
+            recibo.setContribuyente(contribuyente);
+            recibo.setNifContribuyente(contribuyente.getNifnie());
+            recibo.setDireccionCompleta(contribuyente.getDireccion() + contribuyente.getNumero());
+            recibo.setNombre(contribuyente.getNombre());
+            recibo.setApellidos(contribuyente.getApellido1() + contribuyente.getApellido2());
+            Date today = Calendar.getInstance().getTime();
+            recibo.setFechaRecibo(today);
+            recibo.setLecturaAnterior((int)Double.parseDouble(lecturas.get(0)));
+            recibo.setLecturaActual((int)Double.parseDouble(lecturas.get(1)));
+            int consumoInt = (int)Double.parseDouble(lecturas.get(1)) - (int)Double.parseDouble(lecturas.get(0));
+            recibo.setConsumom3(consumoInt);
+            recibo.setFechaPadron(fechaFinTr);
+            recibo.setTotalRecibo(costeTotal);
+            recibo.setIban(contribuyente.getIban());
+            recibo.setExencion(contribuyente.getExencion().toString());
+            DBManager.saveRecibos(recibo);
+            
+            for (int i = 0; i < listaLineas.size(); i++){
+                listaLineas.get(i).setRecibos(recibo);
+                DBManager.saveLineasRecibo(listaLineas.get(i));
+            }
+            String trimestre = input.substring(0, 2);
+            int year = Integer.parseInt(input.substring(3));
+            Lecturas lectura = new Lecturas();
+            lectura.setContribuyente(contribuyente);
+            lectura.setEjercicio(Integer.toString(year));
+            lectura.setPeriodo(trimestre);
+            lectura.setLecturaAnterior((int)Double.parseDouble(lecturas.get(0)));
+            lectura.setLecturaActual((int)Double.parseDouble(lecturas.get(1)));
+            DBManager.saveLecturas(lectura);
             
         }
     }
