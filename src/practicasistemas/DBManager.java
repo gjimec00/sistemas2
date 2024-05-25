@@ -26,6 +26,12 @@ import POJOS.RelContribuyenteOrdenanza;
  */
 public class DBManager {
 
+    /**
+     * Guarda la información del contribuyente en la BB DD.
+     *
+     * @param contribuyente Es el contribuyente objetivo a guardar.
+     */
+    
     public static void saveContribuyente(Contribuyente contribuyente){
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
@@ -87,6 +93,12 @@ public class DBManager {
         session.close();
         
     }
+
+    /**
+     * Guarda la información de las líneas de recibo en la BB DD.
+     *
+     * @param linea Es la línea de recibo objetivo a guardar.
+     */
     
     public static void saveLineasRecibo(Lineasrecibo linea){
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -140,6 +152,13 @@ public class DBManager {
         session.close();
         
     }
+
+    /**
+     * Guarda la información de las ordenanzas en la BB DD.
+     *
+     * @param ordenanza Es la ordenanza objetivo a guardar.
+     */
+    
     public static void saveOrdenanzas(Ordenanza ordenanza){
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
@@ -195,7 +214,11 @@ public class DBManager {
         session.close();
     }
 
-    //Checkear ordenanzaHQL y lecturaHQL
+    /**
+     * Guarda la información de los recibos en la BB DD.
+     *
+     * @param recibo Es el recibo objetivo a guardar.
+     */
 
     public static int saveRecibos(Recibos recibo){
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -236,7 +259,6 @@ public class DBManager {
 
             session.save(auxiliar);
         }else{
-
             recibosBBDD.get(0).setContribuyente(recibo.getContribuyente());
             recibosBBDD.get(0).setNifContribuyente(recibo.getNifContribuyente());
             recibosBBDD.get(0).setDireccionCompleta(recibo.getDireccionCompleta());
@@ -261,6 +283,12 @@ public class DBManager {
         return auxiliar.getNumeroRecibo();
     }
 
+    /**
+     * Guarda la información de las lecturas en la BB DD.
+     *
+     * @param lectura Es la lectura objetivo a guardar.
+     */
+    
     public static void saveLecturas(Lecturas lectura){
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
@@ -303,6 +331,12 @@ public class DBManager {
         session.close();
     }
 
+    /**
+     * Guarda la información de la relación entre contribuyente y ordenanza en la BB DD.
+     *
+     * @param relConOrd Es la relación objetivo a guardar.
+     */
+    
     public static void saveRelCon(RelContribuyenteOrdenanza relConOrd){
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             Session session = sessionFactory.openSession();
@@ -330,7 +364,6 @@ public class DBManager {
 
                 session.save(auxiliar);
             }else{
-
                 relConOrdBBDD.get(0).setContribuyente(relConOrd.getContribuyente());
                 relConOrdBBDD.get(0).setOrdenanza(relConOrd.getOrdenanza());
 
