@@ -34,9 +34,22 @@ import java.text.DecimalFormat;
 
 public class GeneratePDF {
 
+    /**
+     * Genera los PDF de todos los contribuyentes de la lista dada.
+     *
+     * @param contribuyente Contribuyente objetivo a generar pdf.
+     * @param datosRecibo Datos del recibo para generar la tabla correspondiente.
+     * @param costeTotal Coste total del recibo.
+     * @param ivaTotal Iva total del recibo.
+     * @param tipoCalculo Tipo de cálculo realizado en el recibo correspondiente.
+     * @param input Input recibido del usuario con el trimestre correspondiente.
+     *
+     * @throws IOException Excepción producida en caso de que el parámetro "input" fuese incorrecto.
+     */
+    
     public static void generarPDFs(Contribuyente contribuyente, ArrayList<ArrayList<String>> datosRecibo, double costeTotal, double ivaTotal, String tipoCalculo, String input) throws IOException {
         DecimalFormat df = new DecimalFormat("0.00");
-        SimpleDateFormat fecha = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
         StringBuilder sb = new StringBuilder();
         sb.append("./resources/recibos/").append(contribuyente.getNifnie()).append(contribuyente.getNombre()).append(contribuyente.getApellido1()).append(contribuyente.getApellido2()).append(".pdf");
         String dest = sb.toString();
@@ -45,11 +58,10 @@ public class GeneratePDF {
         Document document = new Document(pdf, PageSize.LETTER);
         String imagen = "resources/imgEmpresa.jpg";
 
-        float[] columnDetWidths = {1, 1}; // Two columns
+        float[] columnDetWidths = {1, 1};
         Table detailsTable = new Table(UnitValue.createPercentArray(columnDetWidths));
         detailsTable.setWidth(UnitValue.createPercentValue(100));
 
-        // Company details
         Cell companyDetailsCell = new Cell()
                 .add(new Paragraph("Astorga").setTextAlignment(TextAlignment.CENTER).setMarginTop(5))
                 .add(new Paragraph("P24001017F").setTextAlignment(TextAlignment.CENTER))
@@ -58,28 +70,25 @@ public class GeneratePDF {
                 .setBorder(new SolidBorder(1));
         detailsTable.addCell(companyDetailsCell);
 
-        // Invoice details
         Cell invoiceDetailsCell = new Cell()
                 .add(new Paragraph("IBAN: "+ contribuyente.getIban()).setTextAlignment(TextAlignment.RIGHT).setMarginTop(5).setMarginRight(5))
                 .add(new Paragraph("Tipo de cálculo: " + tipoCalculo).setTextAlignment(TextAlignment.RIGHT).setMarginRight(5))
-                .add(new Paragraph("Fecha de alta: " + fecha.format(contribuyente.getFechaAlta())).setTextAlignment(TextAlignment.RIGHT).setMarginRight(5))
+                .add(new Paragraph("Fecha de alta: " + date.format(contribuyente.getFechaAlta())).setTextAlignment(TextAlignment.RIGHT).setMarginRight(5))
                 .setBorder(Border.NO_BORDER);
         detailsTable.addCell(invoiceDetailsCell);
 
         document.add(detailsTable);
         
-        float[] columnImgWidths = {1, 0.975f}; // Two columns
+        float[] columnImgWidths = {1, 0.975f};
         Table imgDetTable = new Table(UnitValue.createPercentArray(columnImgWidths));
         imgDetTable.setWidth(UnitValue.createPercentValue(100));
         
-        // Image part
         Cell imageCell = new Cell()
                 .add(new Image(ImageDataFactory.create(imagen)).setHorizontalAlignment(HorizontalAlignment.CENTER))
                 .setBorder(Border.NO_BORDER)
                 .setVerticalAlignment(VerticalAlignment.MIDDLE);
         imgDetTable.addCell(imageCell);
 
-        // Recipient details
         Cell recipientDetailsCell = new Cell()
                 .add(new Paragraph("Destinatario:").setBold().setMarginTop(5).setMarginLeft(5))
                 .add(new Paragraph(contribuyente.getNombre() + " " + contribuyente.getApellido1() + " " + contribuyente.getApellido2()).setTextAlignment(TextAlignment.RIGHT).setMarginRight(5))
@@ -91,15 +100,13 @@ public class GeneratePDF {
         
         document.add(imgDetTable);
         
-        // Lecturas del medidor
-        float[] columnMeterWidths = {1, 1, 1}; // Tres columnas iguales
+        float[] columnMeterWidths = {1, 1, 1};
         Table meterTable = new Table(UnitValue.createPercentArray(columnMeterWidths));
         meterTable.setWidth(UnitValue.createPercentValue(100))
-                .setMarginTop(10) // Márgenes superior
-                .setMarginBottom(10) // Márgenes inferior
+                .setMarginTop(10)
+                .setMarginBottom(10)
                 .setBorder(new SolidBorder(ColorConstants.BLACK, 1));
 
-        // Agregar las celdas de lectura de medidor
         List < String > lecturas = new ArrayList < > (contribuyente.getLecturases());
         if (lecturas.size() == 1) {
             lecturas.add(lecturas.get(0));
@@ -114,7 +121,6 @@ public class GeneratePDF {
         meterTable.addCell(new Cell().add(new Paragraph("Lectura anterior: " + lecturas.get(0))).setBorder(Border.NO_BORDER));
         meterTable.addCell(new Cell().add(new Paragraph("Consumo: " + consumo + " metros cúbicos.")).setBorder(Border.NO_BORDER));
 
-        // Agregar la tabla al documento
         document.add(meterTable);
         String trimestre = input.substring(0, 2);
         int year = Integer.parseInt(input.substring(3));
@@ -128,7 +134,6 @@ public class GeneratePDF {
         } else {
             trimestreT = "Cuarto trimestre";
         }
-        // Add invoice period
         document.add(new Paragraph("Recibo agua: " + trimestreT + " de " + Integer.toString(year)).setBold().setItalic().setTextAlignment(TextAlignment.CENTER).setMarginTop(30).setMarginBottom(30));
         
 
@@ -137,7 +142,6 @@ public class GeneratePDF {
             Table table = new Table(UnitValue.createPercentArray(columnWidths));
             table.setWidth(UnitValue.createPercentValue(100));
 
-            // Add table headers
             table.addHeaderCell(new Cell().add(new Paragraph("Concepto")).setBackgroundColor(new DeviceRgb(224, 224, 224)).setMargin(5));
             table.addHeaderCell(new Cell().add(new Paragraph("Subconcepto")).setBackgroundColor(new DeviceRgb(224, 224, 224)).setMargin(5));
             table.addHeaderCell(new Cell().add(new Paragraph("M3 incluídos")).setBackgroundColor(new DeviceRgb(224, 224, 224)).setMargin(5));
@@ -146,35 +150,31 @@ public class GeneratePDF {
             table.addHeaderCell(new Cell().add(new Paragraph("Importe")).setBackgroundColor(new DeviceRgb(224, 224, 224)).setMargin(5));
             table.addHeaderCell(new Cell().add(new Paragraph("Descuento")).setBackgroundColor(new DeviceRgb(224, 224, 224)).setMargin(5));
 
-            // Add table data
             int rows = datosRecibo.size();
             int cols = datosRecibo.get(0).size();
             String[][] array = new String[rows][];
             for (int i = 0; i < rows; i++) {
                 ArrayList<String> sublist = datosRecibo.get(i);
-                array[i] = sublist.toArray(new String[0]); // Convertir la sublista a array y asignarla
+                array[i] = sublist.toArray(new String[0]);
             }
+            
             String[][] data = array;
-
             for (String[] row : data) {
                 for (String cell : row) {
                     table.addCell(new Cell().add(new Paragraph(cell)).setMargin(5));
                 }
             }
 
-            // Add totals row
             table.addCell(new Cell(1, 3).add(new Paragraph("TOTALES")).setMargin(5));
             table.addCell(new Cell().add(new Paragraph(df.format(contribuyente.getBaseImponible())).setMargin(5)));
             table.addCell(new Cell(5, 7).add(new Paragraph(df.format(ivaTotal)).setMargin(5).setTextAlignment(TextAlignment.CENTER)));
 
             document.add(table);
         }else{
-            // Create a table
             float[] columnWidths = {3, 3, 3, 3, 3, 3};
             Table table = new Table(UnitValue.createPercentArray(columnWidths));
             table.setWidth(UnitValue.createPercentValue(100));
-
-            // Add table headers
+            
             table.addHeaderCell(new Cell().add(new Paragraph("Concepto")).setBackgroundColor(new DeviceRgb(224, 224, 224)).setMargin(5));
             table.addHeaderCell(new Cell().add(new Paragraph("Subconcepto")).setBackgroundColor(new DeviceRgb(224, 224, 224)).setMargin(5));
             table.addHeaderCell(new Cell().add(new Paragraph("M3 incluídos")).setBackgroundColor(new DeviceRgb(224, 224, 224)).setMargin(5));
@@ -187,28 +187,27 @@ public class GeneratePDF {
             String[][] array = new String[rows][];
             for (int i = 0; i < rows; i++) {
                 ArrayList<String> sublist = datosRecibo.get(i);
-                array[i] = sublist.toArray(new String[0]); // Convertir la sublista a array y asignarla
+                array[i] = sublist.toArray(new String[0]);
             }
+            
             String[][] data = array;
-
             for (String[] row : data) {
                 for (String cell : row) {
                     table.addCell(new Cell().add(new Paragraph(cell)).setMargin(5));
                 }
             }
 
-            // Add totals row
             table.addCell(new Cell(1, 3).add(new Paragraph("TOTALES")).setMargin(5));
             table.addCell(new Cell().add(new Paragraph(df.format(contribuyente.getBaseImponible()))).setMargin(5));
             table.addCell(new Cell(5, 6).add(new Paragraph(df.format(ivaTotal))).setMargin(5).setTextAlignment(TextAlignment.CENTER));
 
             document.add(table);
         }
-        float[] finalPriceWidths = {1, 1}; // Two columns
+        
+        float[] finalPriceWidths = {1, 1};
         Table finalPriceTable = new Table(UnitValue.createPercentArray(finalPriceWidths));
         finalPriceTable.setWidth(UnitValue.createPercentValue(100));
 
-        // Company details
         Cell totalCell = new Cell()
                 .add(new Paragraph("TOTAL BASE IMPONIBLE").setMarginTop(30))
                 .add(new Paragraph("TOTAL IVA").setMarginBottom(10))
@@ -216,7 +215,6 @@ public class GeneratePDF {
                 .setBorderBottom(new SolidBorder(2));
         finalPriceTable.addCell(totalCell);
 
-        // Invoice details
         Cell priceCell = new Cell()
                 .add(new Paragraph(df.format(contribuyente.getBaseImponible())).setTextAlignment(TextAlignment.RIGHT).setMarginTop(30))
                 .add(new Paragraph(df.format(ivaTotal)).setTextAlignment(TextAlignment.RIGHT).setMarginBottom(10))
@@ -226,17 +224,15 @@ public class GeneratePDF {
 
         document.add(finalPriceTable);
 
-        float[] finalWidths = {1, 1}; // Two columns
+        float[] finalWidths = {1, 1};
         Table finalTable = new Table(UnitValue.createPercentArray(finalWidths));
         finalTable.setWidth(UnitValue.createPercentValue(100));
 
-        // Company details
         Cell totalFinalCell = new Cell()
                 .add(new Paragraph("TOTAL RECIBO"))
                 .setBorder(Border.NO_BORDER);
         finalTable.addCell(totalFinalCell);
 
-        // Invoice details
         Cell priceFinalCell = new Cell()
                 .add(new Paragraph(df.format(costeTotal)).setTextAlignment(TextAlignment.RIGHT))
                 .setBorder(Border.NO_BORDER);
@@ -246,6 +242,17 @@ public class GeneratePDF {
         
         document.close();
     }
+
+    /**
+     * Genera el PDF con un resumen de los totales de un trimestre dado.
+     *
+     * @param totalBaseImponible Base imponible total del resumen.
+     * @param totalIva Iva total del recibo.
+     * @param input Input recibido del usuario con el trimestre correspondiente.
+     *
+     * @throws IOException Excepción producida en caso de que el parámetro "input" fuese incorrecto.
+     */
+    
     public static void generarResumen(double totalBaseImponible, double totalIva, String input) throws IOException{
         String dest = "resources/recibos/resumen.pdf";
         DecimalFormat df = new DecimalFormat("0.00");
