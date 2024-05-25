@@ -48,10 +48,6 @@ import POJOS.RelContribuyenteOrdenanza;
  * @author Guille & Ovi 😎
  */
 public class Practicasistemas {
-
-    /**
-     * @param args the command line arguments
-     */
     public static int contador = 0;
     public static double totalBaseImponible = 0;
     public static double totalIva = 0;
@@ -159,6 +155,23 @@ public class Practicasistemas {
             System.out.println(e);
         }
     }
+
+    /**
+     * Comprueba un DNI dado para saber si puede ser subsanable, es válido o incorrecto.
+     *
+     * @param nifnie número del NIF o NIE a comprobar.
+     * @param contribuyente Contribuyente objetivo a comprobar.
+     * @param document Cuerpo del documento XML.
+     * @param contribuyentesElem Elemento raíz del documento XML referente a los contribuyentes.
+     * @param listanifnies Mapa con NIFs y NIEs.
+     * @param ordenanzas Mapa con una lista de ordenanzas.
+     * @param fechaFinTr Fecha final del trimestre indicado.
+     * @param documentRecib Cuerpo del documento XML para recibos.
+     * @param recibosElem Elemento raíz del documento XML referente a los recibos.
+     *
+     * @throws IOException
+     */
+    
     public static void comprobarDNI(String nifnie, Contribuyente contribuyente, Document document, Element contribuyentesElem, Map listanifnies, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem) throws IOException {
         String letter = "TRWAGMYFPDXBNJZSQVHLCKE";
         String dniNieRaw = nifnie;
@@ -196,7 +209,6 @@ public class Practicasistemas {
                     break;
                 }
             }
-
             if (isDigit) {
                 String correct = dniNie.replace('X', '0').replace('Y', '1').replace('Z', '2');
                 dniNieNum = Integer.parseInt(correct);
@@ -232,6 +244,14 @@ public class Practicasistemas {
         }
     }
 
+    /**
+     * Crea la lista XML de NIFs y NIEs.
+     *
+     * @param contribuyente Contribuyente objetivo a añadir su NIF o NIE.
+     * @param document Cuerpo del documento XML.
+     * @param contribuyentesElem Elemento raíz del documento XML referente a los contribuyentes.
+     */
+    
     public static void crearXMLNifnie(Contribuyente contribuyente, Document document, Element contribuyentesElem) {
         Element contribuyenteElem = document.createElement("Contribuyente");
         contribuyenteElem.setAttribute("id", Integer.toString(contribuyente.getIdContribuyente()));
@@ -285,6 +305,15 @@ public class Practicasistemas {
         }
         contribuyentesElem.appendChild(contribuyenteElem);
     }
+
+    /**
+     * Crea la lista XML de CCC.
+     *
+     * @param contribuyente Contribuyente objetivo a obtener CCC.
+     * @param documentCcc Cuerpo del documento XML de CCC.
+     * @param cuentasElem Elemento raíz del documento XML referente a los CCC.
+     */
+    
     public static void crearXMLccc(Contribuyente contribuyente, Document documentCcc, Element cuentasElem) {
         Element cuentaElem = documentCcc.createElement("Cuenta");
         cuentaElem.setAttribute("id", Integer.toString(contribuyente.getIdContribuyente()));
@@ -300,7 +329,6 @@ public class Practicasistemas {
             nombre.appendChild(nombreT);
             cuentaElem.appendChild(nombre);
         }
-
         Element apellidos = documentCcc.createElement("Apellidos");
         if (contribuyente.getApellido1() != null) {
             Text apellido1T = documentCcc.createTextNode(contribuyente.getApellido1() + " ");
@@ -317,7 +345,6 @@ public class Practicasistemas {
             apellidos.appendChild(apellido2T);
         }
         cuentaElem.appendChild(apellidos);
-
         if (contribuyente.getNifnie() != null) {
             Element nifnie = documentCcc.createElement("NIFNIE");
             Text nifnieT = documentCcc.createTextNode(contribuyente.getNifnie());
@@ -329,7 +356,6 @@ public class Practicasistemas {
             nifnie.appendChild(nifnieT);
             cuentaElem.appendChild(nifnie);
         }
-
         if (contribuyente.getCcc() != null) {
             Element ccc = documentCcc.createElement("CCCErroneo");
             Text cccT = documentCcc.createTextNode(contribuyente.getCcc());
@@ -341,7 +367,6 @@ public class Practicasistemas {
             ccc.appendChild(cccT);
             cuentaElem.appendChild(ccc);
         }
-
         if (contribuyente.getIban() != null) {
             Element iban = documentCcc.createElement("IBANCorrecto");
             Text ibanT = documentCcc.createTextNode(contribuyente.getIban());
@@ -354,26 +379,26 @@ public class Practicasistemas {
             cuentaElem.appendChild(iban);
         }
         cuentasElem.appendChild(cuentaElem);
-
-
-
-
     }
 
-
+    /**
+     * Comprueba si un CCC es subsanable, válido o invalido.
+     *
+     * @param contribuyente Contribuyente objetivo a comprobar.
+     * @param documentCcc Cuerpo del documento XML de CCC.
+     * @param cuentasElem Elemento raíz del documento XML referente a los CCC.
+     */
+    
     public static void comprobarCCC(Contribuyente contribuyente, Document documentCcc, Element cuentasElem) {
-        //Creación alfabeto
         String abcd = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         int[] abcdNum = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35};
         String CCC = contribuyente.getCcc();
-        //Comprobación subsanabilidad
         if (CCC.length() != 20) {
             System.out.println("La longitud de la cuenta no es correcta.");
             crearXMLccc(contribuyente, documentCcc, cuentasElem);
             return;
         }
 
-        //Comprobación letras en CCC (en caso de haber no es subsanable)
         int lett = 0;
         do {
             if (Character.isLetter(CCC.charAt(lett))) {
@@ -384,7 +409,6 @@ public class Practicasistemas {
             lett++;
         } while (lett != 20);
 
-        //Obtención NRBE, Número de oficina, Número de control e ID.
         String nrbe_office = CCC.substring(0, 8);
         String control = CCC.substring(8, 10);
         String id = CCC.substring(10);
@@ -393,7 +417,6 @@ public class Practicasistemas {
         int[] nrbeOfficeCheck = new int[10];
         int[] idCheck = new int[10];
 
-        //Inicializamos el número NRBE y Office con 00 delante.
         nrbeOfficeCheck[0] = 0;
         nrbeOfficeCheck[1] = 0;
 
@@ -410,7 +433,6 @@ public class Practicasistemas {
         int firstSum = 0;
         int secondSum = 0;
 
-        //Obtenemos las sumas totales de los dos números en conjunto para posteriormente obtener los dígitos.
         for (int i = 0; i < nrbeOfficeCheck.length; i++) {
             firstSum += nrbeOfficeCheck[i] * facts[i];
         }
@@ -433,12 +455,10 @@ public class Practicasistemas {
             secondDigit = 0;
         }
 
-        //Convertimos el String a un array de chars para operar con ello y obtener el número final
         char[] CorrectedCCC = CCC.toCharArray();
         String CorrectedCCCStd;
         boolean check = false;
 
-        //Comprobamos si coincide el número de control válido con el existente, en caso de no coincidir subsana.
         char firstDigitStr = String.valueOf(firstDigit).charAt(0);
         if (Character.getNumericValue(control.charAt(0)) != Character.getNumericValue(firstDigitStr)) {
             System.out.println("El primer dígito de control no es correcto.");
@@ -452,16 +472,13 @@ public class Practicasistemas {
             CorrectedCCC[9] = String.valueOf(secondDigit).charAt(0);
             check = true;
         }
-
-
         CorrectedCCCStd = new String(CorrectedCCC);
 
-        //Obtenemos un array de chars a partir del CCC e implementando los números de las letras del país
         char[] IBAN = new char[26];
         System.arraycopy(CorrectedCCC, 0, IBAN, 0, CorrectedCCC.length);
 
-        char firstIbanLetter = contribuyente.getPaisCcc().charAt(0); //Crear String PaisCCC y PaisCCC.charAt(0)
-        char secondIbanLetter = contribuyente.getPaisCcc().charAt(1); //Crear String PaisCCC y PaisCCC.charAt(1)
+        char firstIbanLetter = contribuyente.getPaisCcc().charAt(0);
+        char secondIbanLetter = contribuyente.getPaisCcc().charAt(1);
 
         for (int i = 0; i < abcd.length(); i++) {
             if (firstIbanLetter == abcd.charAt(i)) {
@@ -480,11 +497,9 @@ public class Practicasistemas {
                 }
             }
         }
-
         IBAN[24] = '0';
         IBAN[25] = '0';
 
-        //Creamos un String a partir del array de chars con números del IBAN para operar en él aplicando el módulo
         String IBANStr = new String(IBAN);
         BigInteger IBANNum = new BigInteger(IBANStr);
         BigInteger IBANModule = IBANNum.mod(BigInteger.valueOf(97));
@@ -500,7 +515,6 @@ public class Practicasistemas {
             conv[0] = '0';
         }
 
-        //Comprobamos si los dígitos de control obtenidos son válidos.
         StringBuilder correctedIBAN = new StringBuilder();
         for (int i = 0; i < 24; i++) {
             if (i == 0) {
@@ -521,9 +535,18 @@ public class Practicasistemas {
         }
         contribuyente.setCcc(CorrectedCCCStd);
         ExcelManager.setNewCCCIBAN("./resources/SistemasAgua.xlsx", contribuyente);
-
-
     }
+
+    /**
+     * Genera un recibo a partir de datos dados.
+     *
+     * @param contribuyente Contribuyente objetivo del recibo a generar.
+     * @param ordenanzas Mapa con una lista de ordenanzas para agregar al recibo.
+     * @param fechaFinTr Fecha final del trimestre indicado.
+     * @param documentRecib Cuerpo del documento XML para recibos.
+     * @param recibosElem Elemento raíz del documento XML referente a los recibos.
+     */
+    
     public static void generarRecibo(Contribuyente contribuyente, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem) throws IOException {
         if (fechaFinTr.after(contribuyente.getFechaAlta()) && (contribuyente.getFechaBaja() == null || contribuyente.getFechaBaja().after(fechaFinTr))) {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -603,9 +626,6 @@ public class Practicasistemas {
                                         linea.setM3incluidos(ordenanzas.get(j).getM3incluidos());
                                         diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
                                     }
-
-
-
                                 }
                             }
                             if (diferenciaLecturas < 0) {
@@ -619,7 +639,6 @@ public class Practicasistemas {
                             linea.setM3incluidos(0);
                         }
                         if (ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getPrecioFijo() == null && ordenanzas.get(j).getPorcentaje() != null) {
-
                             if (Integer.parseInt(conceptosCobrar.get(i)) < ordenanzas.get(j).getConceptoRelacionado()) {
                                 diferidos.add(conceptoId);
                                 break;
@@ -629,9 +648,7 @@ public class Practicasistemas {
                                 costeTramo += baseOtroConcepto;
                                 fila.add(df.format(0));
                                 linea.setM3incluidos(0);
-
                             }
-
                         }
 
                         if (ordenanzas.get(j).getSubconcepto().contains("Desagüe")) {
@@ -653,7 +670,6 @@ public class Practicasistemas {
                                 costeTramo = costeTramo + ordenanzas.get(j).getPreciom3() * 1;
                                 metrosUsados++;
                                 diferenciaLecturas--;
-
                             }
                             fila.add(df.format(metrosUsados));
                             linea.setM3incluidos(metrosUsados);
@@ -667,7 +683,6 @@ public class Practicasistemas {
                                     costeTramo += ordenanzas.get(j).getPreciom3() * 1;
                                     metrosUsados++;
                                     diferenciaLecturas--;
-
                                 }
                                 fila.add(df.format(metrosUsados));
                                 linea.setM3incluidos(metrosUsados);
@@ -718,12 +733,10 @@ public class Practicasistemas {
                         linea.setIdRecibo(lastIdRecibo);
                         listaLineas.add(linea);
                     }
-
                 }
                 if (!diferidos.contains(conceptoId)) {
                     costeTotal += costeConcepto;
                     listaConceptos.put(conceptosCobrar.get(i), costeConceptoSinD);
-
                 }
             }
 
@@ -732,7 +745,6 @@ public class Practicasistemas {
                 double costeTramo = 0;
                 double ivaTramo = 0;
                 double costeConceptoSinD = 0;
-
                 for (int j = 2; j < ordenanzas.size() + 2; j++) {
                     if (diferido == ordenanzas.get(j).getIdOrdenanza()) {
                         Lineasrecibo linea = new Lineasrecibo();
@@ -768,15 +780,12 @@ public class Practicasistemas {
                         linea.setIdRecibo(lastIdRecibo);
                         listaLineas.add(linea);
                     }
-
                 }
                 ivaTotal += ivaTramo;
                 System.out.println(df.format(costeConcepto) + " iva tramo: " + ivaTramo);
                 costeTotal += costeTramo;
                 listaConceptos.put(String.valueOf(diferido), costeConceptoSinD);
-
             }
-
             System.out.println(contribuyente.getNombre() + " sin iva: " + costeTotal + " iva: " + ivaTotal);
             if (contribuyente.getExencion().equals('S')) {
                 costeTotal = 0;
@@ -792,7 +801,6 @@ public class Practicasistemas {
             System.out.println(contribuyente.getNombre() + ": " + costeTotal);
             crearXMLRecibos(contribuyente, documentRecib, recibosElem, lastIdRecibo);
             GeneratePDF.generarPDFs(contribuyente, datosRecibo, costeTotal, ivaTotal, tipoCalculo, input);
-
             System.out.println(lastIdRecibo);
             recibo.setContribuyente(contribuyente);
             recibo.setNifContribuyente(contribuyente.getNifnie());
@@ -824,10 +832,18 @@ public class Practicasistemas {
             lectura.setLecturaAnterior((int) Double.parseDouble(lecturas.get(0)));
             lectura.setLecturaActual((int) Double.parseDouble(lecturas.get(1)));
             DBManager.saveLecturas(lectura);
-
         }
     }
 
+    /**
+     * Crea el XML conteniendo los contenidos de los recibos y el contribuyente.
+     *
+     * @param contribuyente Contribuyente objetivo a generar XML del recibo pertinente.
+     * @param documentRecib Cuerpo del documento XML del recibo.
+     * @param recibosElem Elemento raíz del documento XML referente a los recibos.
+     * @param lastIdRecibo Índice del último recibo escrito.
+     */
+    
     public static void crearXMLRecibos(Contribuyente contribuyente, Document documentRecib, Element recibosElem, int lastIdRecibo) {
         contador++;
         Element reciboElem = documentRecib.createElement("Recibo");
@@ -1001,6 +1017,14 @@ public class Practicasistemas {
         recibosElem.appendChild(reciboElem);
     }
 
+    /**
+     * Método que devuelve cuál es el último día de un trimestre dado.
+     *
+     * @return fecha del último día del trimestre.
+     * @param year Año del trimestre.
+     * @param month Mes de la fecha dada.
+     */
+    
     private static Date getLastDayOfTrimestre(int year, int month) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
