@@ -106,7 +106,7 @@ public class Practicasistemas {
 
             contribuyentes = ExcelManager.getContribuyentesExcel("./resources/SistemasAgua.xlsx");
             ordenanzas = ExcelManager.getOrdenanzasExcel("./resources/SistemasAgua.xlsx");
-            for (int i = 2; i < ordenanzas.size() + 2; i++){
+            for (int i = 2; i < ordenanzas.size() + 2; i++) {
                 DBManager.saveOrdenanzas(ordenanzas.get(i));
             }
             Map < Integer, String > listanifnies = new LinkedHashMap < > ();
@@ -159,7 +159,7 @@ public class Practicasistemas {
             System.out.println(e);
         }
     }
-    public static void comprobarDNI(String nifnie, Contribuyente contribuyente, Document document, Element contribuyentesElem, Map listanifnies, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem) throws IOException{
+    public static void comprobarDNI(String nifnie, Contribuyente contribuyente, Document document, Element contribuyentesElem, Map listanifnies, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem) throws IOException {
         String letter = "TRWAGMYFPDXBNJZSQVHLCKE";
         String dniNieRaw = nifnie;
 
@@ -224,8 +224,9 @@ public class Practicasistemas {
         }
         if (!listanifnies.containsValue(contribuyente.getNifnie())) {
             listanifnies.put(contribuyente.getIdContribuyente(), contribuyente.getNifnie());
-            generarRecibo(contribuyente, ordenanzas, fechaFinTr, documentRecib, recibosElem);
             DBManager.saveContribuyente(contribuyente);
+            generarRecibo(contribuyente, ordenanzas, fechaFinTr, documentRecib, recibosElem);
+
         } else {
             crearXMLNifnie(contribuyente, document, contribuyentesElem);
         }
@@ -363,34 +364,7 @@ public class Practicasistemas {
     public static void comprobarCCC(Contribuyente contribuyente, Document documentCcc, Element cuentasElem) {
         //Creación alfabeto
         String abcd = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        int[] abcdNum = {
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21,
-            22,
-            23,
-            24,
-            25,
-            26,
-            27,
-            28,
-            29,
-            30,
-            31,
-            32,
-            33,
-            34,
-            35
-        };
+        int[] abcdNum = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35};
         String CCC = contribuyente.getCcc();
         //Comprobación subsanabilidad
         if (CCC.length() != 20) {
@@ -414,18 +388,7 @@ public class Practicasistemas {
         String nrbe_office = CCC.substring(0, 8);
         String control = CCC.substring(8, 10);
         String id = CCC.substring(10);
-        int[] facts = {
-            1,
-            2,
-            4,
-            8,
-            5,
-            10,
-            9,
-            7,
-            3,
-            6
-        };
+        int[] facts = {1, 2, 4, 8, 5, 10, 9, 7, 3, 6};
 
         int[] nrbeOfficeCheck = new int[10];
         int[] idCheck = new int[10];
@@ -559,24 +522,24 @@ public class Practicasistemas {
         contribuyente.setCcc(CorrectedCCCStd);
         ExcelManager.setNewCCCIBAN("./resources/SistemasAgua.xlsx", contribuyente);
 
-        //System.out.println(Arrays.toString(nrbeOfficeCheck) + "\n" + Arrays.toString(idCheck) + "\n" + firstDigit + "\n" + secondDigit + "\n" + Arrays.toString(CorrectedCCC) + "\n" + correctedIBAN);
 
     }
-    public static void generarRecibo(Contribuyente contribuyente, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem) throws IOException{
+    public static void generarRecibo(Contribuyente contribuyente, Map < Integer, Ordenanza > ordenanzas, Date fechaFinTr, Document documentRecib, Element recibosElem) throws IOException {
         if (fechaFinTr.after(contribuyente.getFechaAlta()) && (contribuyente.getFechaBaja() == null || contribuyente.getFechaBaja().after(fechaFinTr))) {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             Session session = sessionFactory.openSession();
             Transaction tx = session.beginTransaction();
             String lastRecHQL = "SELECT COALESCE(MAX(r.numeroRecibo), 0) FROM Recibos r";
             Query lastRecQuery = session.createQuery(lastRecHQL);
-            
+
             int lastIdRecibo = (int) lastRecQuery.uniqueResult() + 1;
             tx.commit();
+            session.close();
             Recibos recibo = new Recibos();
             RelContribuyenteOrdenanza relConOrd = new RelContribuyenteOrdenanza();
-            List < Lineasrecibo >  listaLineas = new ArrayList <> ();
+            List < Lineasrecibo > listaLineas = new ArrayList < > ();
             System.out.println(contribuyente.getNombre());
-            ArrayList<ArrayList<String>> datosRecibo = new ArrayList<>();
+            ArrayList < ArrayList < String >> datosRecibo = new ArrayList < > ();
             List < String > lecturas = new ArrayList < > (contribuyente.getLecturases());
             String tipoCalculo = "";
             if (lecturas.size() == 1) {
@@ -604,50 +567,45 @@ public class Practicasistemas {
                 int conceptoId = Integer.parseInt(conceptosCobrar.get(i));
                 for (int j = 2; j < ordenanzas.size() + 2; j++) {
                     double costeTramo = 0;
-                    //System.out.println("Concepto: " + Integer.parseInt(conceptosCobrar.get(i)) + " Ordenanza" + ordenanzas.get(j).getIdOrdenanza());
                     if (Integer.parseInt(conceptosCobrar.get(i)) == ordenanzas.get(j).getIdOrdenanza()) {
-                        /*StringBuilder sb = new StringBuilder();
-                        sb.append("fila").append()*/
                         relConOrd.setContribuyente(contribuyente);
                         relConOrd.setOrdenanza(ordenanzas.get(j));
                         DBManager.saveRelCon(relConOrd);
-                        
+
                         Lineasrecibo linea = new Lineasrecibo();
-                        ArrayList<String> fila = new ArrayList<>();
+                        ArrayList < String > fila = new ArrayList < > ();
                         fila.add(ordenanzas.get(j).getConcepto());
                         linea.setConcepto(ordenanzas.get(j).getConcepto());
                         fila.add(ordenanzas.get(j).getSubconcepto());
                         linea.setSubconcepto(ordenanzas.get(j).getSubconcepto());
-                        //fila.add(df.format(diferenciaLecturas));
                         tipoCalculo = ordenanzas.get(j).getTipoCalculo();
-                        
-                        //System.out.println(ordenanzas.get(j).getAcumulable() + "\n" + ordenanzas.get(j).getPrecioFijo() + "\n" + conceptosCobrar.get(i).toString());
+
                         if (ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getM3incluidos() != null) {
                             costeTramo += ordenanzas.get(j).getPrecioFijo();
                             if (ordenanzas.get(j).getAcumulable() != null) {
                                 if (ordenanzas.get(j).getAcumulable().equals("S")) {
                                     metrosAcumulados += ordenanzas.get(j).getM3incluidos();
-                                    if (metrosAcumulados > diferenciaLecturas) { 
+                                    if (metrosAcumulados > diferenciaLecturas) {
                                         fila.add(df.format(diferenciaLecturas));
                                         linea.setM3incluidos(diferenciaLecturas);
                                         diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
-                                    }else{
+                                    } else {
                                         fila.add(df.format(0));
                                         linea.setM3incluidos(0);
                                     }
                                 } else {
-                                    if(diferenciaLecturas < ordenanzas.get(j).getM3incluidos()){
+                                    if (diferenciaLecturas < ordenanzas.get(j).getM3incluidos()) {
                                         fila.add(df.format(diferenciaLecturas));
                                         linea.setM3incluidos(diferenciaLecturas);
                                         diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
-                                    }else{
+                                    } else {
                                         fila.add(df.format(ordenanzas.get(j).getM3incluidos()));
                                         linea.setM3incluidos(ordenanzas.get(j).getM3incluidos());
                                         diferenciaLecturas = diferenciaLecturas - ordenanzas.get(j).getM3incluidos();
                                     }
-                                    
-                                    
-                                    
+
+
+
                                 }
                             }
                             if (diferenciaLecturas < 0) {
@@ -660,10 +618,8 @@ public class Practicasistemas {
                             fila.add(df.format(0));
                             linea.setM3incluidos(0);
                         }
-                        //System.out.println("Concepto: " + ordenanzas.get(j).getSubconcepto() + " " + ordenanzas.get(j).getM3incluidos() + " " + ordenanzas.get(j).getPorcentaje());
                         if (ordenanzas.get(j).getSubconcepto().equals("Fijo") && ordenanzas.get(j).getPrecioFijo() == null && ordenanzas.get(j).getPorcentaje() != null) {
-                            //Si el conceptoCobrar es mayor que el idOrdenanza que tenemos, añadir al final de la lista la ordenanza
-                            //para que la cobre cuando ya haya calculado el concepto siguiente
+
                             if (Integer.parseInt(conceptosCobrar.get(i)) < ordenanzas.get(j).getConceptoRelacionado()) {
                                 diferidos.add(conceptoId);
                                 break;
@@ -697,7 +653,7 @@ public class Practicasistemas {
                                 costeTramo = costeTramo + ordenanzas.get(j).getPreciom3() * 1;
                                 metrosUsados++;
                                 diferenciaLecturas--;
-                                
+
                             }
                             fila.add(df.format(metrosUsados));
                             linea.setM3incluidos(metrosUsados);
@@ -711,11 +667,11 @@ public class Practicasistemas {
                                     costeTramo += ordenanzas.get(j).getPreciom3() * 1;
                                     metrosUsados++;
                                     diferenciaLecturas--;
-                                    
+
                                 }
                                 fila.add(df.format(metrosUsados));
                                 linea.setM3incluidos(metrosUsados);
-                            }else{
+                            } else {
                                 fila.add(df.format(metrosUsados));
                                 linea.setM3incluidos(metrosUsados);
                             }
@@ -741,7 +697,7 @@ public class Practicasistemas {
                         costeConceptoSinD += costeTramo;
                         linea.setBaseImponible(costeTramo);
                         if (contribuyente.getBonificacion() != 0) {
-                            double bonificacion = costeTramo * contribuyente.getBonificacion() / 100;  
+                            double bonificacion = costeTramo * contribuyente.getBonificacion() / 100;
                             costeTramo = costeTramo - bonificacion;
                         }
                         linea.setBonificacion(contribuyente.getBonificacion());
@@ -767,7 +723,7 @@ public class Practicasistemas {
                 if (!diferidos.contains(conceptoId)) {
                     costeTotal += costeConcepto;
                     listaConceptos.put(conceptosCobrar.get(i), costeConceptoSinD);
-                    //System.out.println(df.format(costeConcepto));
+
                 }
             }
 
@@ -776,11 +732,11 @@ public class Practicasistemas {
                 double costeTramo = 0;
                 double ivaTramo = 0;
                 double costeConceptoSinD = 0;
-                //System.out.println(diferido);
+
                 for (int j = 2; j < ordenanzas.size() + 2; j++) {
                     if (diferido == ordenanzas.get(j).getIdOrdenanza()) {
                         Lineasrecibo linea = new Lineasrecibo();
-                        ArrayList<String> fila = new ArrayList<>();
+                        ArrayList < String > fila = new ArrayList < > ();
                         fila.add(ordenanzas.get(j).getConcepto());
                         linea.setConcepto(ordenanzas.get(j).getConcepto());
                         fila.add(ordenanzas.get(j).getSubconcepto());
@@ -837,8 +793,7 @@ public class Practicasistemas {
             crearXMLRecibos(contribuyente, documentRecib, recibosElem, lastIdRecibo);
             GeneratePDF.generarPDFs(contribuyente, datosRecibo, costeTotal, ivaTotal, tipoCalculo, input);
 
-
-            recibo.setNumeroRecibo(lastIdRecibo);
+            System.out.println(lastIdRecibo);
             recibo.setContribuyente(contribuyente);
             recibo.setNifContribuyente(contribuyente.getNifnie());
             recibo.setDireccionCompleta(contribuyente.getDireccion() + contribuyente.getNumero());
@@ -846,17 +801,17 @@ public class Practicasistemas {
             recibo.setApellidos(contribuyente.getApellido1() + contribuyente.getApellido2());
             Date today = Calendar.getInstance().getTime();
             recibo.setFechaRecibo(today);
-            recibo.setLecturaAnterior((int)Double.parseDouble(lecturas.get(0)));
-            recibo.setLecturaActual((int)Double.parseDouble(lecturas.get(1)));
-            int consumoInt = (int)Double.parseDouble(lecturas.get(1)) - (int)Double.parseDouble(lecturas.get(0));
+            recibo.setLecturaAnterior((int) Double.parseDouble(lecturas.get(0)));
+            recibo.setLecturaActual((int) Double.parseDouble(lecturas.get(1)));
+            int consumoInt = (int) Double.parseDouble(lecturas.get(1)) - (int) Double.parseDouble(lecturas.get(0));
             recibo.setConsumom3(consumoInt);
             recibo.setFechaPadron(fechaFinTr);
             recibo.setTotalRecibo(costeTotal);
             recibo.setIban(contribuyente.getIban());
             recibo.setExencion(contribuyente.getExencion().toString());
-            DBManager.saveRecibos(recibo);
-            
-            for (int i = 0; i < listaLineas.size(); i++){
+            int numRec = DBManager.saveRecibos(recibo);
+            recibo.setNumeroRecibo(numRec);
+            for (int i = 0; i < listaLineas.size(); i++) {
                 listaLineas.get(i).setRecibos(recibo);
                 DBManager.saveLineasRecibo(listaLineas.get(i));
             }
@@ -866,13 +821,13 @@ public class Practicasistemas {
             lectura.setContribuyente(contribuyente);
             lectura.setEjercicio(Integer.toString(year));
             lectura.setPeriodo(trimestre);
-            lectura.setLecturaAnterior((int)Double.parseDouble(lecturas.get(0)));
-            lectura.setLecturaActual((int)Double.parseDouble(lecturas.get(1)));
+            lectura.setLecturaAnterior((int) Double.parseDouble(lecturas.get(0)));
+            lectura.setLecturaActual((int) Double.parseDouble(lecturas.get(1)));
             DBManager.saveLecturas(lectura);
-            
+
         }
     }
-    
+
     public static void crearXMLRecibos(Contribuyente contribuyente, Document documentRecib, Element recibosElem, int lastIdRecibo) {
         contador++;
         Element reciboElem = documentRecib.createElement("Recibo");

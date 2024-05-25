@@ -68,8 +68,6 @@ public class DBManager {
         }else{
             contribuyentesBBDD.get(0).setApellido1(contribuyente.getApellido1());
             contribuyentesBBDD.get(0).setApellido2(contribuyente.getApellido2());
-            //contribuyentesBBDD.get(0).setNombre(contribuyente.getNombre());
-            //contribuyentesBBDD.get(0).setNifnie(contribuyente.getNifnie());
             contribuyentesBBDD.get(0).setDireccion(contribuyente.getDireccion());
             contribuyentesBBDD.get(0).setNumero(contribuyente.getNumero());
             contribuyentesBBDD.get(0).setPaisCcc(contribuyente.getPaisCcc());
@@ -78,7 +76,6 @@ public class DBManager {
             contribuyentesBBDD.get(0).setEemail(contribuyente.getEemail());
             contribuyentesBBDD.get(0).setExencion(contribuyente.getExencion());
             contribuyentesBBDD.get(0).setBonificacion((double) contribuyente.getBonificacion());
-            //contribuyentesBBDD.get(0).setFechaAlta(contribuyente.getFechaAlta());
             contribuyentesBBDD.get(0).setFechaBaja(contribuyente.getFechaBaja());
 
             session.update(contribuyentesBBDD.get(0));
@@ -87,6 +84,7 @@ public class DBManager {
         
         }
         tx.commit();
+        session.close();
         
     }
     
@@ -128,21 +126,18 @@ public class DBManager {
             
             int lastIdCont = (int) lastContQuery.uniqueResult() + 1;
 
-            lineasreciboBBDD.get(0).setId(linea.getId());
-            //auxiliar.setConcepto(linea.getConcepto());
-            //auxiliar.setSubconcepto(linea.getSubconcepto());
             lineasreciboBBDD.get(0).setBaseImponible(linea.getBaseImponible());
             lineasreciboBBDD.get(0).setPorcentajeIva(linea.getPorcentajeIva());
             lineasreciboBBDD.get(0).setImporteiva(linea.getImporteiva());
             lineasreciboBBDD.get(0).setM3incluidos(linea.getM3incluidos());
             lineasreciboBBDD.get(0).setBonificacion(linea.getBonificacion());
             lineasreciboBBDD.get(0).setImporteBonificacion(linea.getImporteBonificacion());
-            //auxiliar.setIdRecibo(linea.getIdRecibo);
 
             session.update(lineasreciboBBDD.get(0));
         
         }
         tx.commit();
+        session.close();
         
     }
     public static void saveOrdenanzas(Ordenanza ordenanza){
@@ -183,10 +178,6 @@ public class DBManager {
 
             session.save(auxiliar);
         }else{
-            //ordenanzasBBDD.get(0).setId(lastIdOrd);
-            //ordenanzasBBDD.get(0).setIdOrdenanza(ordenanza.getIdOrdenanza());
-            //ordenanzasBBDD.get(0).setConcepto(ordenanza.getConcepto());
-            //ordenanzasBBDD.get(0).setSubconcepto(ordenanza.getSubconcepto());
             ordenanzasBBDD.get(0).setDescripcion(ordenanza.getDescripcion());
             ordenanzasBBDD.get(0).setAcumulable(ordenanza.getAcumulable());
             ordenanzasBBDD.get(0).setPrecioFijo(ordenanza.getPrecioFijo());
@@ -201,11 +192,12 @@ public class DBManager {
             session.update(ordenanzasBBDD.get(0));
         }
         tx.commit();
+        session.close();
     }
 
     //Checkear ordenanzaHQL y lecturaHQL
 
-    public static void saveRecibos(Recibos recibo){
+    public static int saveRecibos(Recibos recibo){
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
@@ -245,9 +237,8 @@ public class DBManager {
             session.save(auxiliar);
         }else{
 
-            //recibosBBDD.get(0).setNumeroRecibo(recibo.getNumeroRecibo());
             recibosBBDD.get(0).setContribuyente(recibo.getContribuyente());
-            //recibosBBDD.get(0).setNifContribuyente(recibo.getNifContribuyente());
+            recibosBBDD.get(0).setNifContribuyente(recibo.getNifContribuyente());
             recibosBBDD.get(0).setDireccionCompleta(recibo.getDireccionCompleta());
             recibosBBDD.get(0).setNombre(recibo.getNombre());
             recibosBBDD.get(0).setApellidos(recibo.getApellidos());
@@ -255,7 +246,7 @@ public class DBManager {
             recibosBBDD.get(0).setLecturaAnterior(recibo.getLecturaAnterior());
             recibosBBDD.get(0).setLecturaActual(recibo.getLecturaActual());
             recibosBBDD.get(0).setConsumom3(recibo.getConsumom3());
-            //recibosBBDD.get(0).setFechaPadron(recibo.getFechaPadron());
+            recibosBBDD.get(0).setFechaPadron(recibo.getFechaPadron());
             recibosBBDD.get(0).setTotalBaseImponible(recibo.getTotalBaseImponible());
             recibosBBDD.get(0).setTotalIva(recibo.getTotalIva());
             recibosBBDD.get(0).setTotalRecibo(recibo.getTotalRecibo());
@@ -263,8 +254,11 @@ public class DBManager {
             recibosBBDD.get(0).setExencion(recibo.getExencion());
 
             session.update(recibosBBDD.get(0));
+            auxiliar = recibosBBDD.get(0);
         }
         tx.commit();
+        session.close();
+        return auxiliar.getNumeroRecibo();
     }
 
     public static void saveLecturas(Lecturas lectura){
@@ -297,7 +291,6 @@ public class DBManager {
 
             session.save(auxiliar);
         }else{
-            lecturasBBDD.get(0).setId(lectura.getId());
             lecturasBBDD.get(0).setContribuyente(lectura.getContribuyente());
             lecturasBBDD.get(0).setEjercicio(lectura.getEjercicio());
             lecturasBBDD.get(0).setPeriodo(lectura.getPeriodo());
@@ -307,6 +300,7 @@ public class DBManager {
             session.update(lecturasBBDD.get(0));
         }
         tx.commit();
+        session.close();
     }
 
     public static void saveRelCon(RelContribuyenteOrdenanza relConOrd){
@@ -343,5 +337,6 @@ public class DBManager {
                 session.update(relConOrdBBDD.get(0));
             }
             tx.commit();
+            session.close();
         }
 }
