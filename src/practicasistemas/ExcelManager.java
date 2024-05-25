@@ -2,7 +2,6 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
- * 0@author Guille & Ovi 😎
  */
 
 package practicasistemas;
@@ -29,31 +28,44 @@ import java.util.Set;
  */
 public class ExcelManager {
 
+    /**
+     * Genera un mapa con los contribuyentes existentes en el excel.
+     *
+     * @return Mapa con los contribuyentes.
+     * @param excel Excel dado para substraer datos.
+     */    
+    
     public static Map getContribuyentesExcel(String excel){
         Map<Integer, Contribuyente> mapContribuyentes = new LinkedHashMap<>();
         try (FileInputStream inputExcel = new FileInputStream(excel);
             Workbook workbook = new XSSFWorkbook(inputExcel)){
             Sheet sheet = workbook.getSheetAt(0);
-
-                for(int i = 1; i <= sheet.getLastRowNum(); i++){
-                    Row row = sheet.getRow(i);
-                    if(row != null && row.getCell(0) != null){
-                        Contribuyente contribuyente = createContribuyenteFromRow(row);
-                        mapContribuyentes.put(contribuyente.getIdContribuyente(), contribuyente);
-                    }else{
-                        Contribuyente contribuyente = new Contribuyente();
-                        contribuyente.setIdContribuyente(0);
-                        mapContribuyentes.put(i + 1, contribuyente);
-                    }
+            for(int i = 1; i <= sheet.getLastRowNum(); i++){
+                Row row = sheet.getRow(i);
+                if(row != null && row.getCell(0) != null){
+                    Contribuyente contribuyente = createContribuyenteFromRow(row);
+                    mapContribuyentes.put(contribuyente.getIdContribuyente(), contribuyente);
+                }else{
+                    Contribuyente contribuyente = new Contribuyente();
+                    contribuyente.setIdContribuyente(0);
+                    mapContribuyentes.put(i + 1, contribuyente);
                 }
-                workbook.close();
-                inputExcel.close();
+            }
+            workbook.close();
+            inputExcel.close();
         }catch (Exception e){
             Logger.getLogger(ExcelManager.class.getName()).log(Level.SEVERE, "Error al leer el archivo Excel", e);
         }
         return mapContribuyentes;
     }
 
+    /**
+     * Genera contribuyentes a partir de una columna dada.
+     *
+     * @return Contribuyente.
+     * @param row Columna con la información perteneciente al contribuyente.
+     */
+    
     private static Contribuyente createContribuyenteFromRow(Row row){
         int id = row.getRowNum() + 1;
         Contribuyente contribuyente = new Contribuyente();
@@ -114,6 +126,13 @@ public class ExcelManager {
         return contribuyente;
     }
 
+    /**
+     * Escribe en el excel el contribuyente nuevo en caso de ser subsanado por su NIFNIE.
+     *
+     * @param archivo Pathfile al excel objetivo.
+     * @param contribuyente Contribuyente subsanado por su NIFNIE.
+     */
+    
     public static void setNewContribuyente(String archivo, Contribuyente contribuyente){
         try {
             FileInputStream inputExcel = new FileInputStream(new File(archivo));
@@ -144,6 +163,13 @@ public class ExcelManager {
         
         }
     }
+
+    /**
+     * Escribe en el excel el contribuyente nuevo en caso de ser subsanado por su CCC o IBAN.
+     *
+     * @param archivo Pathfile al excel objetivo.
+     * @param contribuyente Contribuyente subsanado por su CCC o IBAN.
+     */
     
     public static void setNewCCCIBAN(String archivo, Contribuyente contribuyente){
         try {
@@ -177,26 +203,40 @@ public class ExcelManager {
         
         }
     }
+
+    /**
+     * Obtiene un mapa con las ordenanzas dadas en el excel.
+     *
+     * @param excel Pathfile al excel objetivo.
+     * @return Mapa con las ordenanzas.
+     */
+    
     public static Map getOrdenanzasExcel(String excel){
         Map<Integer, Ordenanza> mapOrdenanzas = new LinkedHashMap<>();
         try (FileInputStream inputExcel = new FileInputStream(excel);
             Workbook workbook = new XSSFWorkbook(inputExcel)){
             Sheet sheet = workbook.getSheetAt(1);
-
-                for(int i = 1; i <= sheet.getLastRowNum(); i++){
-                    Row row = sheet.getRow(i);
-                    if(row != null && row.getCell(0) != null){
-                        Ordenanza ordenanza = createOrdenanzaFromRow(row);
-                        mapOrdenanzas.put(ordenanza.getId(), ordenanza);
-                    }
+            for(int i = 1; i <= sheet.getLastRowNum(); i++){
+                Row row = sheet.getRow(i);
+                if(row != null && row.getCell(0) != null){
+                    Ordenanza ordenanza = createOrdenanzaFromRow(row);
+                    mapOrdenanzas.put(ordenanza.getId(), ordenanza);
                 }
-                workbook.close();
-                inputExcel.close();
+            }
+            workbook.close();
+            inputExcel.close();
         }catch (Exception e){
             Logger.getLogger(ExcelManager.class.getName()).log(Level.SEVERE, "Error al leer el archivo Excel", e);
         }
         return mapOrdenanzas;
     }
+
+    /**
+     * Crea un objeto ordenanza a partir de una fila dada.
+     *
+     * @param row Fila del excel con los datos necesarios.
+     * @return Objeto ordenanza.
+     */
 
     private static Ordenanza createOrdenanzaFromRow(Row row){
         int id = row.getRowNum() + 1;
